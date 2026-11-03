@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Lostlink – 404 Monitor & Smart Redirects
- * Description:       Tracks the 404 errors of your site and helps you fix them with 301 redirects.
- * Version:           0.1.0-dev
+ * Description:       Finds the broken URLs that cost you visitors, ranks them by priority and fixes them with the right 301 redirect in one click.
+ * Version:           1.0.0
  * Requires at least: 6.5
  * Requires PHP:      8.1
  * Author:            elfifou
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOSTLINK_VERSION', '0.1.0-dev' );
+define( 'LOSTLINK_VERSION', '1.0.0' );
 define( 'LOSTLINK_FILE', __FILE__ );
 
 require_once __DIR__ . '/includes/autoload.php';

@@ -4,37 +4,85 @@ Tags: 404, redirect, 301, broken links, seo
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.1.0-dev
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Tracks the 404 errors of your site and helps you fix them with 301 redirects.
+Finds the broken URLs that cost you visitors, ranks them by priority and fixes them with the right 301 redirect in one click.
 
 == Description ==
 
-Lostlink records every 404 served by WordPress, aggregated per URL:
+Every 404 on your site is a lost visitor, and links from other sites that lead nowhere. Lostlink shows which broken URLs matter most, suggests the page to send them to, and creates the redirect in one click.
 
-* total, daily and weekly hit counts, and a 14-day daily history;
-* the referers linking to each broken URL;
-* URL variants (case, trailing slash, query string) counted as one broken URL;
-* asset 404s (images, CSS, JS, fonts) ignored by default, and configurable exclusion patterns;
-* bounded storage: row limit, referer cap and retention, purged by an hourly cron.
+= Find every broken URL =
 
-The dashboard (Tools > Lostlink) lists the broken URLs with their priority (Critical, High, Medium, Low), 14-day trend and referers, with search, sorting, CSV export, and actions to mark a URL as fixed, ignore it or delete it. Thresholds, exclusions and retention are configurable in its Settings tab.
+* Every 404 served by WordPress is recorded, aggregated per URL: total, daily and weekly hits, first and last seen, and a 14-day history.
+* The referers linking to each broken URL show where the broken links are.
+* Variants of a URL (case, trailing slash, query string) count as one.
+* Missing images, CSS, JS and fonts are left out by default, and exclusion patterns (paths, globs or regular expressions) keep the bot noise out.
+* 404 pages served by a page cache, without running WordPress, are counted too.
 
-Each broken URL can be fixed with a 301 (or 302, 307, 308) redirect, created in the Redirection plugin when it is set up, or in the plugin's own redirects otherwise (configurable). The query string of the requests is passed on in both cases. Redirect loops are blocked; redirect chains and targets that are themselves broken are reported. Built-in redirects only apply to URLs that return a 404, never hiding an existing page. Built-in redirects can be edited (target and type, with the same checks) or deleted from the Redirects tab; those created in Redirection are managed there. If a URL fixed by a redirect returns a 404 again (its redirect was deleted or disabled), it is put back on the dashboard.
+= Know what to fix first =
 
-404 pages served by a page cache plugin without running WordPress are counted too: the 404 page then includes a small script reporting each view (automatic when a page cache plugin is installed, configurable for caches outside WordPress). Only visitors running JavaScript are counted this way.
+The dashboard (Tools > Lostlink) ranks the broken URLs by priority, Critical, High, Medium or Low, from how often and how recently they are hit, with a 14-day trend chart. Search, sorting, bulk actions and CSV export included. The thresholds are settings.
 
-The fix and edit forms open in a dialog from the lists ("Use" fills in a suggested target), and work as plain pages without JavaScript.
+= Fix in one click =
 
-The fix page suggests the published content whose URL is closest to the broken one (posts, pages, custom post types, their archives, categories, tags and custom taxonomies), including content whose slug moved to another path. A sitemap can be added as a source, for the pages that are not WordPress content; it is only fetched from public addresses or the site itself. Plugins can add candidates with the `lostlink_candidate_paths` filter.
+* For each broken URL, Lostlink suggests the published content whose address is closest, including posts whose slug moved to another path: "Use", then "Fix".
+* Redirects are 301 by default (302, 307 and 308 available), and keep the query string of the request, so campaign parameters survive.
+* Redirect loops are blocked; redirect chains and targets that are themselves broken are reported before you save.
+* A URL fixed by a redirect that returns a 404 again (its redirect was deleted or disabled) comes back on the dashboard.
 
-On multilingual sites (Polylang), broken URLs and redirects keep their language prefix (/en/old-page), and the suggestions in the language of the broken URL come first, with their language shown. Other multilingual plugins can tell the language of a path with the `lostlink_path_language` filter.
+= Works with Redirection, or on its own =
 
-The 404s the Redirection plugin logged before Lostlink was installed can be imported from the dashboard (or WP-CLI), so the history is not lost when switching. Hits logged later by both plugins are not counted twice.
+Lostlink creates its redirects in the Redirection plugin when it is set up, so you keep managing them in one place. Without it, Lostlink serves its own redirects, which only apply to URLs that return a 404: they can never hide an existing page.
+
+Switching from Redirection's 404 log? Import its history from the dashboard, without counting any hit twice.
+
+= Multilingual =
+
+On Polylang sites, broken URLs and redirects keep their language prefix, and the suggestions in the language of the broken URL come first.
+
+= Made to last =
+
+* Storage is capped and purged every hour, so anonymous traffic and bots can't grow the tables without limit.
+* Modern, strictly typed PHP 8.1 code, checked with PHPStan at its strictest level and the WordPress Coding Standards, and covered by over 150 automated tests.
+* Translated into French.
+
+= For developers =
+
+WP-CLI commands:
+
+* `wp lostlink list [--limit=<n>] [--format=<format>]`: the broken URLs, most hit first.
+* `wp lostlink referers <path>`: the referers of a broken URL.
+* `wp lostlink suggest <path> [--limit=<n>] [--min-score=<percent>]`: the suggested targets.
+* `wp lostlink import-redirection`: imports the 404 log of the Redirection plugin.
+* `wp lostlink maintenance`: runs the hourly purge now.
+
+Filters: `lostlink_should_record` (skip some 404s), `lostlink_candidate_paths` (add redirect targets), `lostlink_path_language` (language of a path, for multilingual plugins other than Polylang), `lostlink_capability` and `lostlink_settings_capability` (who can use the dashboard and change the settings).
+
+= Privacy =
+
+Lostlink stores, in its own tables, the path of each URL that returned a 404 (without its query string), the referers sent by the browsers, hit counts and dates, and for each redirect the ID of the user who created it. It stores no IP address, no user agent and no cookie, and sends nothing to any third-party service.
+
+A referer is the address of the page a visitor came from, and can contain personal data in its query string: referers are deleted after 90 days without a hit, and capped per URL (both settings). Lostlink adds a suggested paragraph to the privacy policy guide (Settings > Privacy). Deleting the plugin removes all its data.
+
+== Installation ==
+
+1. In Plugins > Add New Plugin, search for "Lostlink", then install and activate it.
+2. 404s are recorded from now on. Open Tools > Lostlink to see them.
+3. If the Redirection plugin logged 404s before, the dashboard offers to import them.
+4. Adjust the thresholds, exclusions and retention in the Settings tab if needed.
 
 == Frequently Asked Questions ==
+
+= Do I need the Redirection plugin? =
+
+No. Lostlink has its own redirects. When Redirection is set up, Lostlink creates the redirects there by default, which can be changed in the settings.
+
+= Does it slow my site down? =
+
+Only 404s cost anything: a few database writes per 404, and a lookup of the built-in redirects. Other pages are not affected, and no script is added to them.
 
 = Are all 404s recorded? =
 
@@ -50,7 +98,7 @@ One exact path each, compared case-insensitively and with or without a trailing 
 
 = Which targets are suggested? =
 
-The 5,000 most recently modified published posts and pages and the 2,000 most used terms, to bound the time of a rebuild on large sites, plus the sitemap URLs when one is set (up to 50 files and 20,000 URLs). Suggestions need permalinks other than "Plain". The list is cached and rebuilt when content changes.
+The 5,000 most recently modified published posts and pages and the 2,000 most used terms, to bound the time of a rebuild on large sites, plus the URLs of a sitemap when one is set in the settings (up to 50 files and 20,000 URLs). Suggestions need permalinks other than "Plain".
 
 = Is my multilingual site supported? =
 
@@ -60,14 +108,14 @@ Polylang is supported. With other multilingual plugins, including WPML, recordin
 
 Each site of a network has its own data and settings, but it is not tested on multisite, and uninstalling only removes the data of the current site.
 
-== WP-CLI ==
+== Screenshots ==
 
-* `wp lostlink list [--limit=<n>] [--format=<format>]`
-* `wp lostlink referers <path>`
-* `wp lostlink suggest <path> [--limit=<n>] [--min-score=<percent>]`
-* `wp lostlink import-redirection`
-* `wp lostlink maintenance`
+1. The dashboard: broken URLs ranked by priority, with their trend and referers.
+2. Fixing a broken URL: the suggested targets, and the redirect form.
+3. The built-in redirects.
+4. The settings.
 
-== Translations ==
+== Changelog ==
 
-A French translation is included.
+= 1.0.0 =
+* First release.

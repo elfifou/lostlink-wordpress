@@ -85,6 +85,16 @@ final class Admin {
 		add_action( 'admin_post_' . self::IMPORT_ACTION, array( self::class, 'handle_import' ) );
 		add_filter( 'set-screen-option', array( self::class, 'save_screen_option' ), 10, 3 );
 		add_filter( 'plugin_action_links_' . plugin_basename( LOSTLINK_FILE ), array( self::class, 'add_action_links' ) );
+		add_action( 'admin_init', array( self::class, 'add_privacy_policy_content' ) );
+	}
+
+	/**
+	 * Suggests a paragraph for the site's privacy policy, in the privacy policy
+	 * guide (Settings > Privacy).
+	 */
+	public static function add_privacy_policy_content(): void {
+		$text = __( 'When you visit an address of this site that does not exist (a "404" error), this address, the date and the address of the page you came from, if your browser sends it, are recorded to find and fix the broken links. No IP address, browser identifier or cookie is recorded. The addresses of the pages you came from are deleted after 90 days without a new visit, unless the site settings say otherwise.', 'lostlink' );
+		wp_add_privacy_policy_content( 'Lostlink', wp_kses_post( wpautop( $text, false ) ) );
 	}
 
 	/**
