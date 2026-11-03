@@ -4,6 +4,11 @@
 	margin-bottom: 1em;
 }
 
+/* The admin caps selects at 25rem, which cuts the longer setting options. */
+.lostlink .form-table select {
+	max-width: 100%;
+}
+
 .lostlink .column-last_seen {
 	width: 11em;
 }
