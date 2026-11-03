@@ -1,0 +1,12 @@
+# Files left out of the release built with wp dist-archive (the WordPress.org
+# zip and SVN): only the code, assets, translations and readme ship.
+.git
+.github
+.gitignore
+.distignore
+.phpunit.result.cache
+phpcs.xml.dist
+phpstan.neon.dist
+phpunit.xml.dist
+tests
+*.zip

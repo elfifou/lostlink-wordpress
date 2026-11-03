@@ -1,0 +1,39 @@
+# Static analysis: PHPStan at its strictest level, with phpstan-strict-rules
+# and the WordPress extension (szepeviktor/phpstan-wordpress).
+parameters:
+	level: max
+	paths:
+		- lostlink.php
+		- uninstall.php
+		- includes
+	scanFiles:
+		- %rootDir%/../../php-stubs/wp-cli-stubs/wp-cli-stubs.php
+		# Polylang, Redirection and php-cli-tools: optional, declared for the analysis.
+		- tests/phpstan/stubs.php
+		- tests/phpstan/stubs-cli-tools.php
+	bootstrapFiles:
+		- tests/phpstan/bootstrap.php
+	dynamicConstantNames:
+		- WP_CACHE
+		- WP_CLI
+	ignoreErrors:
+		# wpdb::prepare() only returns null on a developer error (no placeholder,
+		# wrong number of arguments), which the test suite would show.
+		-
+			message: '#^Parameter \#1 \$query of method wpdb::(query|get_var|get_row|get_col|get_results)\(\) expects string, string\|null given\.$#'
+		-
+			message: '#^Method Lostlink\\\w+::\w+\(\) should return string but returns string\|null\.$#'
+			paths:
+				- includes/class-storage.php
+				- includes/class-redirect-store.php
+		# WP_List_Table passes each row of $items, loaded by prepare_items(), to
+		# these overrides of its untyped methods.
+		-
+			identifier: method.childParameterType
+			paths:
+				- includes/class-dashboard-table.php
+				- includes/class-redirects-table.php
+		# WP_CLI\NoOp, the progress bar when quiet, answers any method with __call().
+		-
+			message: '#^Call to an undefined method cli\\progress\\Bar\|WP_CLI\\NoOp::(tick|finish)\(\)\.$#'
+			path: includes/class-cli.php

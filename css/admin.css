@@ -1,0 +1,158 @@
+/* Lostlink admin page. Colors follow the WordPress admin palette. */
+
+.lostlink .nav-tab-wrapper {
+	margin-bottom: 1em;
+}
+
+.lostlink .column-last_seen {
+	width: 11em;
+}
+
+.lostlink .column-count,
+.lostlink .column-daily_count,
+.lostlink .column-week_count,
+.lostlink .column-priority,
+.lostlink-narrow {
+	width: 6.5em;
+}
+
+.lostlink .column-referers {
+	width: 16em;
+}
+
+.lostlink .column-trend {
+	width: 80px;
+}
+
+.lostlink-date {
+	width: 12em;
+}
+
+/* Paths and referers can be long and unbroken. */
+.lostlink-url {
+	overflow-wrap: anywhere;
+}
+
+.lostlink-referers summary {
+	cursor: pointer;
+}
+
+.lostlink-referers ul {
+	margin: 0.5em 0 0;
+}
+
+.lostlink-referers li {
+	overflow-wrap: anywhere;
+}
+
+.lostlink-badge {
+	display: inline-block;
+	padding: 1px 8px;
+	border-radius: 10px;
+	background: #dcdcde;
+	color: #1d2327;
+	font-size: 12px;
+	line-height: 1.6;
+	white-space: nowrap;
+}
+
+.lostlink-badge--critical {
+	background: #d63638;
+	color: #fff;
+}
+
+.lostlink-badge--high {
+	background: #dba617;
+	color: #1d2327;
+}
+
+.lostlink-badge--medium {
+	background: #72aee6;
+	color: #1d2327;
+}
+
+.lostlink-sparkline {
+	display: block;
+	fill: #dba617;
+}
+
+/* Hits increasing over the period: getting worse. */
+.lostlink-sparkline--up {
+	fill: #d63638;
+}
+
+.lostlink-sparkline--down {
+	fill: #00a32a;
+}
+
+.lostlink-suggestions {
+	max-width: 60em;
+	margin-bottom: 1em;
+}
+
+.lostlink-suggestions .lostlink-actions {
+	width: 9em;
+}
+
+.lostlink-type {
+	margin-left: 0.5em;
+	color: #646970;
+}
+
+/* Similarity bar, its width set by the --lostlink-score property. */
+.lostlink-score {
+	display: block;
+	height: 6px;
+	margin-bottom: 4px;
+	border-radius: 3px;
+	background: #dcdcde;
+	overflow: hidden;
+}
+
+.lostlink-score::before {
+	content: "";
+	display: block;
+	width: var(--lostlink-score, 0);
+	height: 100%;
+	background: #00a32a;
+}
+
+/* Fix and edit pages opened in a dialog, see js/admin.js. */
+.lostlink-dialog {
+	box-sizing: border-box;
+	width: min(60em, calc(100vw - 32px));
+	max-height: calc(100vh - 64px);
+	padding: 8px 24px 16px;
+	border: 0;
+	border-radius: 4px;
+	box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+	overflow: auto;
+}
+
+.lostlink-dialog::backdrop {
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.lostlink-dialog-close {
+	position: sticky;
+	top: 0;
+	float: right;
+	width: 36px;
+	height: 36px;
+	margin-right: -16px;
+	border: 0;
+	background: transparent;
+	color: #50575e;
+	font-size: 28px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.lostlink-dialog-close:hover,
+.lostlink-dialog-close:focus {
+	color: #135e96;
+}
+
+.lostlink-dialog .form-table th {
+	width: 10em;
+}

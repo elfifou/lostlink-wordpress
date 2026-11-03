@@ -1,0 +1,828 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lostlink 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lostlink\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-25T16:52:15+01:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: lostlink\n"
+
+#: includes/class-admin.php:130
+#: includes/class-admin.php:131
+#: includes/class-admin.php:303
+msgid "Lostlink"
+msgstr "Lostlink"
+
+#. Description of the plugin
+#: lostlink.php
+msgid "Tracks the 404 errors of your site and helps you fix them with 301 redirects."
+msgstr "Suit les erreurs 404 de votre site et vous aide à les corriger avec des redirections 301."
+
+#: includes/class-admin.php:148
+#: includes/class-admin.php:293
+msgid "Settings"
+msgstr "Réglages"
+
+#: includes/class-admin.php:220
+msgid "Close"
+msgstr "Fermer"
+
+#: includes/class-admin.php:221
+msgid "Loading…"
+msgstr "Chargement…"
+
+#: includes/class-admin.php:288
+msgid "Broken URLs"
+msgstr "URL cassées"
+
+#. translators: %s: number of redirects.
+#: includes/class-admin.php:290
+#, php-format
+msgid "Redirects (%s)"
+msgstr "Redirections (%s)"
+
+#: includes/class-admin.php:386
+#: includes/class-admin.php:941
+msgid "Back to the broken URLs"
+msgstr "Retour aux URL cassées"
+
+#: includes/class-admin.php:388
+msgid "This broken URL is no longer in the list, or is already fixed."
+msgstr "Cette URL cassée n’est plus dans la liste, ou elle est déjà corrigée."
+
+#. translators: %s: broken URL path.
+#: includes/class-admin.php:400
+#, php-format
+msgid "Fix %s"
+msgstr "Corriger %s"
+
+#. translators: 1: number of hits, 2: date.
+#: includes/class-admin.php:408
+#, php-format
+msgid "%1$s hit, last seen on %2$s."
+msgid_plural "%1$s hits, last seen on %2$s."
+msgstr[0] "%1$s hit, vu pour la dernière fois le %2$s."
+msgstr[1] "%1$s hits, vu pour la dernière fois le %2$s."
+
+#. translators: %s: name of the redirect backend, linked to its list of redirects.
+#: includes/class-admin.php:436
+#, php-format
+msgid "The redirect will be created in: %s."
+msgstr "La redirection sera créée dans : %s."
+
+#: includes/class-admin.php:441
+msgid "Create redirect"
+msgstr "Créer la redirection"
+
+#: includes/class-admin.php:457
+msgid "Redirect to"
+msgstr "Rediriger vers"
+
+#: includes/class-admin.php:464
+msgid "A path of this site starting with \"/\", or a full URL. URLs of this site are saved as paths."
+msgstr "Un chemin de ce site commençant par « / », ou une URL complète. Les URL de ce site sont enregistrées comme des chemins."
+
+#: includes/class-admin.php:466
+msgid "A path of this site starting with \"/\", or a full URL of this site."
+msgstr "Un chemin de ce site commençant par « / », ou une URL complète de ce site."
+
+#: includes/class-admin.php:473
+msgid "Redirect type"
+msgstr "Type de redirection"
+
+#: includes/class-admin.php:498
+msgid "Suggested targets"
+msgstr "Cibles suggérées"
+
+#. translators: %d: minimum similarity, in percent.
+#: includes/class-admin.php:503
+#, php-format
+msgid "No published content has a URL close enough to this one (at least %d%% similar). Enter the target below."
+msgstr "Aucun contenu publié n’a d’URL assez proche de celle-ci (au moins %d %% de similarité). Saisissez la cible ci-dessous."
+
+#: includes/class-admin.php:513
+#: includes/class-redirects-table.php:66
+msgid "Target"
+msgstr "Cible"
+
+#: includes/class-admin.php:514
+msgid "Similarity"
+msgstr "Similarité"
+
+#: includes/class-admin.php:515
+msgid "Actions"
+msgstr "Actions"
+
+#: includes/class-admin.php:525
+msgid "(no title)"
+msgstr "(sans titre)"
+
+#: includes/class-admin.php:535
+msgid "View"
+msgstr "Voir"
+
+#: includes/class-admin.php:535
+msgid "(opens in a new tab)"
+msgstr "(ouvre un nouvel onglet)"
+
+#: includes/class-admin.php:537
+msgid "Use"
+msgstr "Utiliser"
+
+#: includes/class-admin.php:553
+msgid "301 Moved Permanently (recommended)"
+msgstr "301 Déplacé définitivement (recommandé)"
+
+#: includes/class-admin.php:554
+msgid "302 Found (temporary)"
+msgstr "302 Trouvé (temporaire)"
+
+#: includes/class-admin.php:555
+msgid "307 Temporary Redirect"
+msgstr "307 Redirection temporaire"
+
+#: includes/class-admin.php:556
+msgid "308 Permanent Redirect"
+msgstr "308 Redirection définitive"
+
+#: includes/class-admin.php:565
+msgid "Sorry, you are not allowed to fix broken URLs."
+msgstr "Désolé, vous n’avez pas l’autorisation de corriger les URL cassées."
+
+#. translators: 1: source path, 2: target, 3: redirect backend name.
+#: includes/class-admin.php:597
+#, php-format
+msgid "Redirect created from %1$s to %2$s in %3$s."
+msgstr "Redirection créée de %1$s vers %2$s dans %3$s."
+
+#. translators: %s: name of the redirect backend, linked to its list of redirects.
+#: includes/class-admin.php:620
+#, php-format
+msgid "New redirects are created in %s. This list only shows the redirects created by Lostlink itself, which keep working."
+msgstr "Les nouvelles redirections sont créées dans %s. Cette liste ne montre que les redirections créées par Lostlink lui-même, qui continuent de fonctionner."
+
+#: includes/class-admin.php:630
+msgid "These redirects only apply to URLs that return a 404: they never hide an existing page. Deleting one puts its broken URL back on the dashboard."
+msgstr "Ces redirections ne s’appliquent qu’aux URL qui renvoient une 404 : elles ne masquent jamais une page existante. En supprimer une remet son URL cassée dans le tableau de bord."
+
+#: includes/class-admin.php:635
+msgid "Search redirects"
+msgstr "Rechercher des redirections"
+
+#. translators: %s: number of redirects.
+#: includes/class-admin.php:670
+#, php-format
+msgid "%s redirect deleted."
+msgid_plural "%s redirects deleted."
+msgstr[0] "%s redirection supprimée."
+msgstr[1] "%s redirections supprimées."
+
+#: includes/class-admin.php:671
+msgid "Select at least one redirect."
+msgstr "Sélectionnez au moins une redirection."
+
+#: includes/class-admin.php:683
+msgid "Back to the redirects"
+msgstr "Retour aux redirections"
+
+#: includes/class-admin.php:685
+#: includes/class-redirect-service.php:155
+#: includes/class-redirect-store.php:201
+msgid "This redirect no longer exists."
+msgstr "Cette redirection n’existe plus."
+
+#. translators: %s: redirect source path.
+#: includes/class-admin.php:700
+#, php-format
+msgid "Edit the redirect of %s"
+msgstr "Modifier la redirection de %s"
+
+#. translators: 1: current redirect target, 2: date.
+#: includes/class-admin.php:708
+#, php-format
+msgid "Currently redirected to %1$s, since %2$s."
+msgstr "Actuellement redirigée vers %1$s, depuis le %2$s."
+
+#. translators: 1: number of hits, 2: date.
+#: includes/class-admin.php:718
+#, php-format
+msgid "Followed %1$s time, last on %2$s."
+msgid_plural "Followed %1$s times, last on %2$s."
+msgstr[0] "Suivie %1$s fois, la dernière le %2$s."
+msgstr[1] "Suivie %1$s fois, la dernière le %2$s."
+
+#: includes/class-admin.php:722
+msgid "Never followed yet."
+msgstr "Jamais suivie pour l’instant."
+
+#: includes/class-admin.php:743
+msgid "The source can't be changed: it is the broken URL this redirect fixes. Its hit count is kept."
+msgstr "La source ne peut pas être modifiée : c’est l’URL cassée que cette redirection corrige. Son nombre de passages est conservé."
+
+#: includes/class-admin.php:744
+msgid "Save redirect"
+msgstr "Enregistrer la redirection"
+
+#: includes/class-admin.php:755
+msgid "Sorry, you are not allowed to edit redirects."
+msgstr "Désolé, vous n’avez pas l’autorisation de modifier les redirections."
+
+#. translators: 1: source path, 2: target.
+#: includes/class-admin.php:785
+#, php-format
+msgid "Redirect from %1$s to %2$s saved."
+msgstr "Redirection de %1$s vers %2$s enregistrée."
+
+#: includes/class-admin.php:812
+msgid "Search broken URLs"
+msgstr "Rechercher des URL cassées"
+
+#. translators: 1: number of 404 hits, 2: date, 3: date.
+#: includes/class-admin.php:838
+#, php-format
+msgid "The Redirection plugin logged %1$s 404 hit between %2$s and %3$s, before Lostlink started recording. Import it to see it in this dashboard."
+msgid_plural "The Redirection plugin logged %1$s 404 hits between %2$s and %3$s, before Lostlink started recording. Import them to see them in this dashboard."
+msgstr[0] "L’extension Redirection a enregistré %1$s hit 404 entre le %2$s et le %3$s, avant que Lostlink ne commence à enregistrer. Importez-le pour le voir dans ce tableau de bord."
+msgstr[1] "L’extension Redirection a enregistré %1$s hits 404 entre le %2$s et le %3$s, avant que Lostlink ne commence à enregistrer. Importez-les pour les voir dans ce tableau de bord."
+
+#: includes/class-admin.php:852
+msgid "The exclusion rules apply, and the hits on URLs already fixed are not counted. Later hits were recorded by both plugins: they are not imported again."
+msgstr "Les règles d’exclusion s’appliquent, et les hits sur des URL déjà corrigées ne sont pas comptés. Les hits plus récents ont été enregistrés par les deux extensions : ils ne sont pas importés une deuxième fois."
+
+#: includes/class-admin.php:855
+msgid "Import the Redirection 404 log"
+msgstr "Importer le journal des 404 de Redirection"
+
+#: includes/class-admin.php:866
+msgid "Sorry, you are not allowed to import 404s."
+msgstr "Désolé, vous n’avez pas l’autorisation d’importer des 404."
+
+#. translators: 1: number of log rows read, 2: number of hits counted.
+#: includes/class-admin.php:880
+#, php-format
+msgid "%1$s 404 hits read from the Redirection log, %2$s counted (the others are excluded or on fixed URLs)."
+msgstr "%1$s hits 404 lus dans le journal de Redirection, %2$s comptés (les autres sont exclus ou sur des URL corrigées)."
+
+#. translators: %s: number of log rows.
+#: includes/class-admin.php:890
+#, php-format
+msgid "%s hit is left to import: import again to continue."
+msgid_plural "%s hits are left to import: import again to continue."
+msgstr[0] "Il reste %s hit à importer : relancez l’import pour continuer."
+msgstr[1] "Il reste %s hits à importer : relancez l’import pour continuer."
+
+#: includes/class-admin.php:907
+msgid "Select at least one URL and an action."
+msgstr "Sélectionnez au moins une URL et une action."
+
+#. translators: %s: number of URLs.
+#: includes/class-admin.php:913
+#, php-format
+msgid "%s URL marked as fixed."
+msgid_plural "%s URLs marked as fixed."
+msgstr[0] "%s URL marquée comme corrigée."
+msgstr[1] "%s URL marquées comme corrigées."
+
+#. translators: %s: number of URLs.
+#: includes/class-admin.php:915
+#, php-format
+msgid "%s URL ignored."
+msgid_plural "%s URLs ignored."
+msgstr[0] "%s URL ignorée."
+msgstr[1] "%s URL ignorées."
+
+#. translators: %s: number of URLs.
+#: includes/class-admin.php:917
+#, php-format
+msgid "%s URL restored."
+msgid_plural "%s URLs restored."
+msgstr[0] "%s URL restaurée."
+msgstr[1] "%s URL restaurées."
+
+#. translators: %s: number of URLs.
+#: includes/class-admin.php:919
+#, php-format
+msgid "%s URL deleted."
+msgid_plural "%s URLs deleted."
+msgstr[0] "%s URL supprimée."
+msgstr[1] "%s URL supprimées."
+
+#: includes/class-admin.php:944
+msgid "This broken URL no longer exists."
+msgstr "Cette URL cassée n’existe plus."
+
+#. translators: %s: broken URL path.
+#: includes/class-admin.php:956
+#, php-format
+msgid "Referers of %s"
+msgstr "Référents de %s"
+
+#. translators: %s: number of referers.
+#: includes/class-admin.php:962
+#, php-format
+msgid "%s referer recorded."
+msgid_plural "%s referers recorded."
+msgstr[0] "%s référent enregistré."
+msgstr[1] "%s référents enregistrés."
+
+#: includes/class-admin.php:968
+msgid "Referer"
+msgstr "Référent"
+
+#: includes/class-admin.php:969
+#: includes/class-redirects-table.php:68
+msgid "Hits"
+msgstr "Hits"
+
+#: includes/class-admin.php:970
+#: includes/class-dashboard-table.php:111
+msgid "Last seen"
+msgstr "Vu le"
+
+#: includes/class-admin.php:982
+msgid "No referer recorded."
+msgstr "Aucun référent enregistré."
+
+#: includes/class-admin.php:1031
+msgid "Sorry, you are not allowed to export the broken URLs."
+msgstr "Désolé, vous n’avez pas l’autorisation d’exporter les URL cassées."
+
+#: includes/class-builtin-backend.php:42
+#: includes/class-settings-page.php:55
+msgid "Lostlink (built in)"
+msgstr "Lostlink (intégré)"
+
+#: includes/class-dashboard-table.php:110
+msgid "Broken URL"
+msgstr "URL cassée"
+
+#: includes/class-dashboard-table.php:112
+msgid "Total hits"
+msgstr "Total des hits"
+
+#: includes/class-dashboard-table.php:113
+msgid "Today"
+msgstr "Aujourd’hui"
+
+#: includes/class-dashboard-table.php:114
+msgid "This week"
+msgstr "Cette semaine"
+
+#: includes/class-dashboard-table.php:115
+msgid "Referers"
+msgstr "Référents"
+
+#: includes/class-dashboard-table.php:116
+msgid "Priority"
+msgstr "Priorité"
+
+#: includes/class-dashboard-table.php:117
+msgid "Trend"
+msgstr "Tendance"
+
+#: includes/class-dashboard-table.php:153
+#: includes/class-dashboard-table.php:315
+msgid "Restore"
+msgstr "Restaurer"
+
+#: includes/class-dashboard-table.php:154
+#: includes/class-dashboard-table.php:161
+#: includes/class-dashboard-table.php:335
+#: includes/class-redirects-table.php:102
+#: includes/class-redirects-table.php:195
+msgid "Delete"
+msgstr "Supprimer"
+
+#: includes/class-dashboard-table.php:159
+#: includes/class-dashboard-table.php:331
+msgid "Mark as fixed"
+msgstr "Marquer comme corrigée"
+
+#: includes/class-dashboard-table.php:160
+#: includes/class-dashboard-table.php:332
+msgid "Ignore"
+msgstr "Ignorer"
+
+#: includes/class-dashboard-table.php:174
+msgid "Active"
+msgstr "Actives"
+
+#: includes/class-dashboard-table.php:175
+msgid "Ignored"
+msgstr "Ignorées"
+
+#: includes/class-dashboard-table.php:233
+msgid "No broken URL matches your search."
+msgstr "Aucune URL cassée ne correspond à votre recherche."
+
+#: includes/class-dashboard-table.php:235
+msgid "No ignored URL."
+msgstr "Aucune URL ignorée."
+
+#: includes/class-dashboard-table.php:237
+msgid "No broken URL detected yet. The 404 errors of your site will appear here as visitors and bots hit them."
+msgstr "Aucune URL cassée détectée pour l’instant. Les erreurs 404 de votre site apparaîtront ici à mesure que les visiteurs et les robots les rencontrent."
+
+#: includes/class-dashboard-table.php:267
+msgid "Export CSV"
+msgstr "Exporter en CSV"
+
+#. translators: %s: path of the row, a broken URL or a redirect source.
+#: includes/class-dashboard-table.php:280
+#: includes/class-redirects-table.php:150
+#, php-format
+msgid "Select %s"
+msgstr "Sélectionner %s"
+
+#: includes/class-dashboard-table.php:329
+msgid "Fix with a redirect"
+msgstr "Corriger par une redirection"
+
+#: includes/class-dashboard-table.php:331
+msgid "Mark this URL as fixed? Its hits will no longer be counted."
+msgstr "Marquer cette URL comme corrigée ? Ses hits ne seront plus comptés."
+
+#: includes/class-dashboard-table.php:335
+msgid "Delete this URL with its referers and history?"
+msgstr "Supprimer cette URL avec ses référents et son historique ?"
+
+#. translators: %s: date and time.
+#: includes/class-dashboard-table.php:357
+#, php-format
+msgid "First seen: %s"
+msgstr "Vue pour la première fois : %s"
+
+#: includes/class-dashboard-table.php:389
+msgid "None"
+msgstr "Aucun"
+
+#: includes/class-dashboard-table.php:411
+msgid "See all"
+msgstr "Tout voir"
+
+#. translators: %s: number of referers.
+#: includes/class-dashboard-table.php:418
+#, php-format
+msgid "%s referer"
+msgid_plural "%s referers"
+msgstr[0] "%s référent"
+msgstr[1] "%s référents"
+
+#. translators: %s: language name.
+#: includes/class-path-provider.php:136
+#: includes/class-path-provider.php:139
+msgid "Home page"
+msgstr "Page d’accueil"
+
+#. translators: %s: language name.
+#: includes/class-path-provider.php:139
+#, php-format
+msgid "Home page (%s)"
+msgstr "Page d’accueil (%s)"
+
+#: includes/class-path-provider.php:219
+msgid "Archive"
+msgstr "Archive"
+
+#: includes/class-path-provider.php:233
+#: includes/class-settings-page.php:101
+msgid "Sitemap"
+msgstr "Sitemap"
+
+#: includes/enum-priority.php:64
+msgid "Critical"
+msgstr "Critique"
+
+#: includes/enum-priority.php:65
+msgid "High"
+msgstr "Haute"
+
+#: includes/enum-priority.php:66
+msgid "Medium"
+msgstr "Moyenne"
+
+#: includes/enum-priority.php:67
+msgid "Low"
+msgstr "Basse"
+
+#: includes/class-redirect-service.php:94
+msgid "This broken URL is no longer in the list."
+msgstr "Cette URL cassée n’est plus dans la liste."
+
+#: includes/class-redirect-service.php:97
+msgid "This URL is already fixed."
+msgstr "Cette URL est déjà corrigée."
+
+#: includes/class-redirect-service.php:100
+#: includes/class-redirect-service.php:158
+#: includes/class-redirect-store.php:156
+#: includes/class-redirect-store.php:198
+msgid "Invalid redirect status code."
+msgstr "Code de redirection non valide."
+
+#. translators: %s: redirect target.
+#: includes/class-redirect-service.php:114
+#, php-format
+msgid "A redirect for this URL already exists, to %s."
+msgstr "Une redirection existe déjà pour cette URL, vers %s."
+
+#: includes/class-redirect-service.php:204
+msgid "The redirect target is empty."
+msgstr "La cible de la redirection est vide."
+
+#: includes/class-redirect-service.php:207
+msgid "The redirect target must not contain spaces or control characters."
+msgstr "La cible de la redirection ne doit contenir ni espaces ni caractères de contrôle."
+
+#: includes/class-redirect-service.php:216
+msgid "The redirect target must be a path starting with \"/\" or an http(s) URL."
+msgstr "La cible de la redirection doit être un chemin commençant par « / » ou une URL http(s)."
+
+#: includes/class-redirect-service.php:225
+msgid "You are not allowed to redirect to another site."
+msgstr "Vous n’avez pas l’autorisation de rediriger vers un autre site."
+
+#: includes/class-redirect-service.php:291
+msgid "The target is the broken URL itself."
+msgstr "La cible est l’URL cassée elle-même."
+
+#. translators: %s: redirect target.
+#: includes/class-redirect-service.php:293
+#, php-format
+msgid "This redirect would create a loop: %s redirects back to this URL."
+msgstr "Cette redirection créerait une boucle : %s redirige vers cette URL."
+
+#. translators: 1: redirect target, 2: where it is redirected to.
+#: includes/class-redirect-service.php:305
+#, php-format
+msgid "The target %1$s is itself redirected to %2$s: visitors will go through two redirects. Consider using the final URL as target."
+msgstr "La cible %1$s est elle-même redirigée vers %2$s : les visiteurs passeront par deux redirections. Utilisez plutôt l’URL finale comme cible."
+
+#. translators: %s: redirect target.
+#: includes/class-redirect-service.php:319
+#, php-format
+msgid "The target %s is itself a broken URL that has not been fixed or ignored yet."
+msgstr "La cible %s est elle-même une URL cassée, qui n’a pas encore été corrigée ni ignorée."
+
+#: includes/class-redirect-store.php:159
+msgid "A redirect for this URL already exists."
+msgstr "Une redirection existe déjà pour cette URL."
+
+#: includes/class-redirect-store.php:176
+#: includes/class-redirect-store.php:216
+msgid "Unable to save the redirect."
+msgstr "Impossible d’enregistrer la redirection."
+
+#: includes/class-redirection-backend.php:38
+msgid "Redirection plugin"
+msgstr "Extension Redirection"
+
+#: includes/class-redirection-backend.php:100
+msgid "The Redirection plugin is not set up: complete its setup first."
+msgstr "L’extension Redirection n’est pas configurée : terminez d’abord sa configuration."
+
+#: includes/class-redirection-importer.php:192
+msgid "Another import of the Redirection 404 log is running. Try again in a few minutes."
+msgstr "Un autre import du journal des 404 de Redirection est en cours. Réessayez dans quelques minutes."
+
+#: includes/class-redirects-table.php:65
+msgid "Source"
+msgstr "Source"
+
+#: includes/class-redirects-table.php:67
+msgid "Type"
+msgstr "Type"
+
+#: includes/class-redirects-table.php:69
+msgid "Last hit"
+msgstr "Dernier passage"
+
+#: includes/class-redirects-table.php:70
+msgid "Created"
+msgstr "Créée le"
+
+#: includes/class-redirects-table.php:134
+msgid "No redirect matches your search."
+msgstr "Aucune redirection ne correspond à votre recherche."
+
+#: includes/class-redirects-table.php:136
+msgid "No redirect yet. Use \"Fix\" on a broken URL to create one."
+msgstr "Aucune redirection pour l’instant. Utilisez « Corriger » sur une URL cassée pour en créer une."
+
+#: includes/class-redirects-table.php:189
+msgid "Edit"
+msgstr "Modifier"
+
+#: includes/class-redirects-table.php:194
+msgid "Delete this redirect? Its URL will return a 404 again."
+msgstr "Supprimer cette redirection ? Son URL renverra de nouveau une 404."
+
+#: includes/class-redirects-table.php:240
+#: includes/class-settings-page.php:93
+msgid "Never"
+msgstr "Jamais"
+
+#: includes/class-settings-page.php:45
+msgid "Redirects"
+msgstr "Redirections"
+
+#: includes/class-settings-page.php:50
+msgid "Create redirects in"
+msgstr "Créer les redirections dans"
+
+#: includes/class-settings-page.php:52
+msgid "Where the redirects fixing the 404s are created. Existing redirects stay where they are when this changes. With the Redirection plugin, they are created in its first group served by WordPress."
+msgstr "Où sont créées les redirections qui corrigent les 404. Les redirections existantes restent où elles sont si ce réglage change. Avec l’extension Redirection, elles sont créées dans son premier groupe servi par WordPress."
+
+#: includes/class-settings-page.php:54
+msgid "Automatic: the Redirection plugin if it is set up, built-in otherwise"
+msgstr "Automatique : l’extension Redirection si elle est configurée, sinon intégré"
+
+#: includes/class-settings-page.php:58
+msgid "Redirection plugin (not installed or not set up: built in is used meanwhile)"
+msgstr "Extension Redirection (non installée ou non configurée : l’intégré est utilisé en attendant)"
+
+#: includes/class-settings-page.php:62
+msgid "404 logging"
+msgstr "Enregistrement des 404"
+
+#: includes/class-settings-page.php:66
+msgid "Asset 404s"
+msgstr "404 des ressources"
+
+#: includes/class-settings-page.php:68
+msgid "Log the 404 errors of assets (CSS, JS, images, fonts). Enable this only to debug missing assets."
+msgstr "Enregistrer les erreurs 404 des ressources (CSS, JS, images, polices). N’activez cette option que pour déboguer des ressources manquantes."
+
+#: includes/class-settings-page.php:73
+msgid "Exclusion patterns"
+msgstr "Motifs d’exclusion"
+
+#. translators: 1: glob example, 2: regex example.
+#: includes/class-settings-page.php:77
+#, php-format
+msgid "One pattern per line. A path matching any of them is never logged (unlike \"Ignore\" on the dashboard, which hides a URL already logged). Each line is either a path or glob, e.g. %1$s, or a regex delimited by #, ~ or %%, e.g. %2$s."
+msgstr "Un motif par ligne. Un chemin qui correspond à l’un d’eux n’est jamais enregistré (contrairement à « Ignorer » dans le tableau de bord, qui masque une URL déjà enregistrée). Chaque ligne est soit un chemin ou un motif avec jokers, par exemple %1$s, soit une expression régulière délimitée par #, ~ ou %%, par exemple %2$s."
+
+#: includes/class-settings-page.php:85
+msgid "404s served by a page cache"
+msgstr "404 servies par un cache de pages"
+
+#: includes/class-settings-page.php:87
+msgid "A page cache plugin can serve a 404 page without running WordPress, and so without this plugin. To count these hits, the 404 page then includes a small script that reports each view. Only visitors running JavaScript are counted this way, which leaves out most bots."
+msgstr "Une extension de cache peut servir une page 404 sans exécuter WordPress, donc sans cette extension. Pour compter ces hits, la page 404 inclut alors un petit script qui signale chaque affichage. Seuls les visiteurs qui exécutent JavaScript sont comptés ainsi, ce qui exclut la plupart des robots."
+
+#: includes/class-settings-page.php:90
+msgid "Automatic: yes, a page cache is installed"
+msgstr "Automatique : oui, un cache de pages est installé"
+
+#: includes/class-settings-page.php:91
+msgid "Automatic: no, no page cache is installed"
+msgstr "Automatique : non, aucun cache de pages n’est installé"
+
+#: includes/class-settings-page.php:92
+msgid "Always (e.g. for a cache outside WordPress: Varnish, nginx, CDN)"
+msgstr "Toujours (par exemple pour un cache hors de WordPress : Varnish, nginx, CDN)"
+
+#: includes/class-settings-page.php:97
+msgid "Suggestions"
+msgstr "Suggestions"
+
+#. translators: 1: WordPress sitemap path, 2: SEO plugins sitemap path.
+#: includes/class-settings-page.php:105
+#, php-format
+msgid "The published content is always suggested. To also suggest the pages it doesn't cover (custom routes, other software on the same domain), enter the sitemap listing them, e.g. %1$s (WordPress) or %2$s (most SEO plugins). Only the URLs of this site are kept. Leave empty to not use a sitemap."
+msgstr "Les contenus publiés sont toujours suggérés. Pour suggérer aussi les pages qu’ils ne couvrent pas (routes personnalisées, autre logiciel sur le même domaine), indiquez le sitemap qui les liste, par exemple %1$s (WordPress) ou %2$s (la plupart des extensions SEO). Seules les URL de ce site sont conservées. Laissez vide pour ne pas utiliser de sitemap."
+
+#: includes/class-settings-page.php:113
+msgid "Priority thresholds"
+msgstr "Seuils de priorité"
+
+#: includes/class-settings-page.php:115
+msgid "The dashboard shows a Critical / High / Medium / Low priority on each broken URL, based on how often it is hit. The defaults suit a medium-traffic site: lower them on a low-traffic site so real problems stop hiding as Low, raise them on a high-traffic site so bot noise stops showing as Critical."
+msgstr "Le tableau de bord affiche une priorité Critique / Haute / Moyenne / Basse pour chaque URL cassée, selon la fréquence de ses hits. Les valeurs par défaut conviennent à un site au trafic moyen : baissez-les sur un site peu fréquenté pour que les vrais problèmes ne restent pas en Basse, augmentez-les sur un site très fréquenté pour que le bruit des robots n’apparaisse pas en Critique."
+
+#: includes/class-settings-page.php:119
+msgid "Critical: total hits"
+msgstr "Critique : hits au total"
+
+#: includes/class-settings-page.php:119
+msgid "A URL is Critical once hit more than this many times in total."
+msgstr "Une URL est Critique dès qu’elle dépasse ce nombre de hits au total."
+
+#: includes/class-settings-page.php:120
+msgid "Critical: daily hits"
+msgstr "Critique : hits par jour"
+
+#: includes/class-settings-page.php:120
+msgid "A URL is also Critical when hit more than this many times in a day, if last seen within the recency window below. Catches a URL that suddenly gets hammered."
+msgstr "Une URL est aussi Critique quand elle dépasse ce nombre de hits en une journée, si elle a été vue dans la période récente ci-dessous. Repère une URL soudain très sollicitée."
+
+#: includes/class-settings-page.php:121
+msgid "Critical: recency window (days)"
+msgstr "Critique : période récente (jours)"
+
+#: includes/class-settings-page.php:121
+msgid "How many days back count as recent for the daily hits rule above."
+msgstr "Nombre de jours considérés comme récents pour la règle des hits par jour ci-dessus."
+
+#: includes/class-settings-page.php:122
+msgid "High: weekly hits"
+msgstr "Haute : hits par semaine"
+
+#: includes/class-settings-page.php:122
+msgid "A URL that is not Critical is High once hit more than this many times this week."
+msgstr "Une URL qui n’est pas Critique est Haute dès qu’elle dépasse ce nombre de hits cette semaine."
+
+#: includes/class-settings-page.php:123
+msgid "Medium: daily hits"
+msgstr "Moyenne : hits par jour"
+
+#: includes/class-settings-page.php:123
+msgid "A URL that is not Critical or High is Medium once hit more than this many times today."
+msgstr "Une URL qui n’est ni Critique ni Haute est Moyenne dès qu’elle dépasse ce nombre de hits aujourd’hui."
+
+#: includes/class-settings-page.php:124
+msgid "Medium: recency window (days)"
+msgstr "Moyenne : période récente (jours)"
+
+#: includes/class-settings-page.php:124
+msgid "A URL last seen within this many days is at least Medium, so recently broken links are not buried as Low."
+msgstr "Une URL vue dans ce nombre de jours est au moins Moyenne, pour que les liens cassés récemment ne restent pas enfouis en Basse."
+
+#: includes/class-settings-page.php:128
+msgid "Data retention"
+msgstr "Conservation des données"
+
+#. translators: %d: number of days.
+#: includes/class-settings-page.php:131
+#, php-format
+msgid "Broken URLs and referers come from anonymous traffic, so their number is capped. An hourly task removes what goes beyond these limits, and the daily history older than the %d days shown in the trend."
+msgstr "Les URL cassées et les référents viennent du trafic anonyme : leur nombre est donc plafonné. Une tâche horaire supprime ce qui dépasse ces limites, ainsi que l’historique quotidien antérieur aux %d jours affichés dans la tendance."
+
+#: includes/class-settings-page.php:135
+msgid "Maximum number of broken URLs"
+msgstr "Nombre maximal d’URL cassées"
+
+#: includes/class-settings-page.php:135
+msgid "Beyond this number, the least recently seen URLs are deleted, with their referers and history. 0 for no limit."
+msgstr "Au-delà de ce nombre, les URL vues le moins récemment sont supprimées, avec leurs référents et leur historique. 0 pour aucune limite."
+
+#: includes/class-settings-page.php:136
+msgid "Maximum number of referers per URL"
+msgstr "Nombre maximal de référents par URL"
+
+#: includes/class-settings-page.php:136
+msgid "Once reached, new referers of that URL are no longer recorded (its hits still are). 0 for no limit."
+msgstr "Une fois atteint, les nouveaux référents de cette URL ne sont plus enregistrés (ses hits le sont toujours). 0 pour aucune limite."
+
+#: includes/class-settings-page.php:137
+msgid "Referer retention (days)"
+msgstr "Conservation des référents (jours)"
+
+#: includes/class-settings-page.php:137
+msgid "Referers not seen for this many days are deleted, as referer URLs can contain personal data. 0 to keep them."
+msgstr "Les référents non vus depuis ce nombre de jours sont supprimés, car leurs URL peuvent contenir des données personnelles. 0 pour les conserver."
+
+#: includes/class-settings-page.php:232
+msgid "Sorry, you are not allowed to change these settings."
+msgstr "Désolé, vous n’avez pas l’autorisation de modifier ces réglages."
+
+#: includes/class-settings.php:159
+msgid "The sitemap URL must be a path of this site starting with \"/\", or an http(s) URL. The previous value was kept."
+msgstr "L’URL du sitemap doit être un chemin de ce site commençant par « / », ou une URL http(s). La valeur précédente a été conservée."
+
+#. translators: 1: setting label, 2: minimum value.
+#: includes/class-settings.php:172
+#, php-format
+msgid "\"%1$s\" must be a whole number of at least %2$d. The previous value was kept."
+msgstr "« %1$s » doit être un nombre entier supérieur ou égal à %2$d. La valeur précédente a été conservée."
+
+#. translators: %s: list of patterns.
+#: includes/class-settings.php:182
+#, php-format
+msgid "Invalid regular expression: %s. The previous exclusion patterns were kept."
+msgstr "Expression régulière non valide : %s. Les motifs d’exclusion précédents ont été conservés."
+
+#. translators: %d: number of days.
+#: includes/class-sparkline.php:86
+#, php-format
+msgid "Hits over the last %d days"
+msgstr "Hits des %d derniers jours"
+
+#. Author of the plugin
+#: lostlink.php
+msgid "elfifou"
+msgstr "elfifou"
+
+#. Plugin Name of the plugin
+#: lostlink.php
+msgid "Lostlink – 404 Monitor & Smart Redirects"
+msgstr "Lostlink – Suivi des 404 et redirections intelligentes"
