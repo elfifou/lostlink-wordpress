@@ -19,7 +19,9 @@ class Test_Installer extends WP_UnitTestCase {
 		Installer::maybe_upgrade();
 
 		$this->assertSame( Installer::DB_VERSION, (int) get_option( Installer::DB_VERSION_OPTION ) );
-		// maybe_upgrade() reads it on every request.
-		$this->assertContains( $wpdb->get_var( $wpdb->prepare( 'SELECT autoload FROM %i WHERE option_name = %s', $wpdb->options, Installer::DB_VERSION_OPTION ) ), wp_autoload_values_to_autoload() );
+		// maybe_upgrade() reads it on every request. Before WordPress 6.6, the
+		// only autoloaded value is "yes".
+		$autoloaded = function_exists( 'wp_autoload_values_to_autoload' ) ? wp_autoload_values_to_autoload() : array( 'yes' );
+		$this->assertContains( $wpdb->get_var( $wpdb->prepare( 'SELECT autoload FROM %i WHERE option_name = %s', $wpdb->options, Installer::DB_VERSION_OPTION ) ), $autoloaded );
 	}
 }

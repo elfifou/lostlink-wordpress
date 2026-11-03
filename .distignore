@@ -9,6 +9,9 @@
 README.md
 SECURITY.md
 .phpunit.result.cache
+composer.json
+composer.lock
+vendor
 phpcs.xml.dist
 phpstan.neon.dist
 phpunit.xml.dist

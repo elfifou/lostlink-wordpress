@@ -1,0 +1,141 @@
+# Coding standards, static analysis, tests and Plugin Check, on every push
+# and pull request.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: PHPCS and PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer, cs2pr
+
+      - uses: ramsey/composer-install@v3
+
+      - name: PHPCS
+        run: vendor/bin/phpcs -q --report=checkstyle | cs2pr
+        shell: bash
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress --error-format=github
+
+  test:
+    name: PHP ${{ matrix.php }}, WordPress ${{ matrix.wp }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The minimum versions of the plugin header, then the latest.
+          - php: '8.1'
+            wp: '6.5'
+          - php: '8.1'
+            wp: latest
+          - php: '8.4'
+            wp: latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+    env:
+      WP_CORE_DIR: ${{ github.workspace }}/wordpress
+      WP_PHPUNIT__TESTS_CONFIG: ${{ github.workspace }}/wp-tests-config.php
+      LOSTLINK_VENDOR_DIR: ${{ github.workspace }}/lostlink/vendor
+    steps:
+      # In a folder of its own: the Redirection plugin goes next to it.
+      - uses: actions/checkout@v4
+        with:
+          path: lostlink
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli
+          coverage: none
+          tools: composer
+
+      - uses: ramsey/composer-install@v3
+        with:
+          working-directory: lostlink
+
+      # The latest release of the branch tested, and its test suite.
+      - name: WordPress ${{ matrix.wp }}
+        run: |
+          if [ "${{ matrix.wp }}" = latest ]; then
+            version=$(curl -sSf https://api.wordpress.org/core/version-check/1.7/ | grep -o '"current":"[^"]*"' | head -1 | cut -d'"' -f4)
+          else
+            version=$(curl -sSf https://api.wordpress.org/core/stable-check/1.0/ | grep -o "\"${{ matrix.wp }}\.[0-9]*\"" | tr -d '"' | sort -V | tail -1)
+          fi
+          echo "WordPress $version"
+          curl -sSfL "https://wordpress.org/wordpress-$version.tar.gz" | tar -xz
+          cd lostlink
+          composer require --dev "wp-phpunit/wp-phpunit:~$(echo "$version" | cut -d. -f1,2).0" --with-all-dependencies --no-interaction --no-progress
+          cd ..
+          cat > wp-tests-config.php <<'PHP'
+          <?php
+          define( 'ABSPATH', getenv( 'WP_CORE_DIR' ) . '/' );
+          define( 'WP_DEFAULT_THEME', 'default' );
+          define( 'WP_DEBUG', true );
+          define( 'DB_NAME', 'wordpress_test' );
+          define( 'DB_USER', 'root' );
+          define( 'DB_PASSWORD', 'root' );
+          define( 'DB_HOST', '127.0.0.1' );
+          define( 'DB_CHARSET', 'utf8mb4' );
+          define( 'DB_COLLATE', '' );
+          $table_prefix = 'wptests_';
+          define( 'WP_TESTS_DOMAIN', 'example.org' );
+          define( 'WP_TESTS_EMAIL', 'admin@example.org' );
+          define( 'WP_TESTS_TITLE', 'Test Blog' );
+          define( 'WP_PHP_BINARY', 'php' );
+          define( 'WPLANG', '' );
+          PHP
+
+      # Its backend and importer tests run against the real plugin.
+      - name: Redirection plugin
+        run: |
+          curl -sSfL -o redirection.zip https://downloads.wordpress.org/plugin/redirection.latest-stable.zip
+          unzip -q redirection.zip
+
+      - name: PHPUnit
+        working-directory: lostlink
+        run: vendor/bin/phpunit
+
+  plugin-check:
+    name: Plugin Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The release content: what .distignore leaves.
+      - name: Build
+        run: rsync -a --exclude-from=.distignore ./ "$RUNNER_TEMP/lostlink/"
+
+      - uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: ${{ runner.temp }}/lostlink
+          slug: lostlink
+          strict: true
+          include-low-severity-errors: true
+          include-low-severity-warnings: true
