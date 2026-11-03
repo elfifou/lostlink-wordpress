@@ -40,6 +40,10 @@ wp dist-archive . --plugin-dirname=lostlink
 
 The WordPress.org assets (icon, banners, screenshots) are in `.wordpress-org/`.
 
+## Contributing
+
+Bugs and feature requests are welcome in the [issues](https://github.com/elfifou/lostlink-wordpress/issues). For help, use the [WordPress.org support forum](https://wordpress.org/support/plugin/lostlink/). Security issues are reported privately, see [SECURITY.md](SECURITY.md).
+
 ## License
 
 [GPL-2.0-or-later](LICENSE).

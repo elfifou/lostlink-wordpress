@@ -108,6 +108,14 @@ Polylang is supported. With other multilingual plugins, including WPML, recordin
 
 Each site of a network has its own data and settings, but it is not tested on multisite, and uninstalling only removes the data of the current site.
 
+= Where do I report a bug or suggest a feature? =
+
+Ask for help in the support forum. Bugs and feature requests are welcome in the GitHub issues of the plugin: https://github.com/elfifou/lostlink-wordpress/issues
+
+= How do I report a security issue? =
+
+Please don't post it publicly: report it privately from the Security tab of the GitHub repository (https://github.com/elfifou/lostlink-wordpress/security), with "Report a vulnerability".
+
 == Screenshots ==
 
 1. The dashboard: broken URLs ranked by priority, with their trend and referers.
