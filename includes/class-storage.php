@@ -9,6 +9,10 @@ namespace Lostlink;
 
 defined( 'ABSPATH' ) || exit;
 
+// The plugin's own tables: WordPress has no API for them, and their rows change
+// on each 404, so caching the queries would only add invalidations.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 /**
  * Reads and writes the plugin tables.
  *
@@ -272,7 +276,7 @@ class Storage {
 		// $orderby and $order are whitelisted above; path_hash makes the order
 		// stable across pages when the sorted values are equal.
 		/** @var list<Path_Row> */
-		return $wpdb->get_results( "SELECT {$this->columns( $args['now'] ?? time() )} FROM {$this->dashboard_where( $args )} ORDER BY $orderby $order, path_hash ASC$limit", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+		return $wpdb->get_results( "SELECT {$this->columns( $args['now'] ?? time() )} FROM {$this->dashboard_where( $args )} ORDER BY $orderby $order, path_hash ASC$limit", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Whitelisted and prepared above.
 	}
 
 	/**
@@ -308,7 +312,7 @@ class Storage {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Prepared in dashboard_where().
 		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$this->dashboard_where( $args )}" );
 	}
 
@@ -382,7 +386,7 @@ class Storage {
 
 		$from = $wpdb->prepare( '%i ORDER BY count DESC, last_seen DESC LIMIT %d', self::tables()['paths'], $limit );
 		/** @var list<Path_Row> */
-		return $wpdb->get_results( "SELECT {$this->columns( time() )} FROM $from", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Both parts are prepared.
+		return $wpdb->get_results( "SELECT {$this->columns( time() )} FROM $from", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Both parts are prepared.
 	}
 
 	/**

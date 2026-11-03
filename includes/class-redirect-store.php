@@ -9,6 +9,10 @@ namespace Lostlink;
 
 defined( 'ABSPATH' ) || exit;
 
+// The plugin's own tables: WordPress has no API for them, and their rows change
+// on each 404, so caching the queries would only add invalidations.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 /**
  * Stores the redirects created by the plugin and serves them.
  *
@@ -271,7 +275,7 @@ class Redirect_Store {
 		$limit   = $limit > 0 ? $wpdb->prepare( ' LIMIT %d, %d', max( 0, $args['offset'] ?? 0 ), $limit ) : '';
 
 		/** @var list<Redirect_Row> */
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Whitelisted and prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Whitelisted and prepared above.
 		return $wpdb->get_results( "SELECT * FROM {$this->where( $args )} ORDER BY $orderby $order, id DESC$limit", ARRAY_A );
 	}
 
@@ -284,7 +288,7 @@ class Redirect_Store {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Prepared in where().
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Prepared in where().
 		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$this->where( $args )}" );
 	}
 

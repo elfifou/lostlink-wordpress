@@ -42,26 +42,7 @@
 		</properties>
 	</rule>
 
-	<!--
-		All the queries target the plugin's own tables, through $wpdb->prepare():
-		there is no WordPress API for them, and the write path (one 404 hit) must
-		not be cached.
-	-->
-	<rule ref="WordPress.DB.DirectDatabaseQuery.DirectQuery">
-		<exclude-pattern>/includes/class-storage\.php</exclude-pattern>
-		<exclude-pattern>/includes/class-redirect-store\.php</exclude-pattern>
-		<exclude-pattern>/includes/class-redirection-importer\.php</exclude-pattern>
-		<exclude-pattern>/uninstall\.php</exclude-pattern>
-	</rule>
-	<rule ref="WordPress.DB.DirectDatabaseQuery.NoCaching">
-		<exclude-pattern>/includes/class-storage\.php</exclude-pattern>
-		<exclude-pattern>/includes/class-redirect-store\.php</exclude-pattern>
-		<exclude-pattern>/includes/class-redirection-importer\.php</exclude-pattern>
-		<exclude-pattern>/uninstall\.php</exclude-pattern>
-	</rule>
-	<rule ref="WordPress.DB.DirectDatabaseQuery.SchemaChange">
-		<exclude-pattern>/uninstall\.php</exclude-pattern>
-	</rule>
+	<!-- Direct database queries are allowed file by file, with their reason, so Plugin Check sees it too. -->
 
 	<!-- Tests follow the WordPress core test suite conventions: test names document themselves. -->
 	<rule ref="WordPress.Files.FileName.InvalidClassFileName">

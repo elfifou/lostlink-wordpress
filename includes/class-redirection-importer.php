@@ -9,6 +9,10 @@ namespace Lostlink;
 
 defined( 'ABSPATH' ) || exit;
 
+// The 404 log table of Redirection, read in batches, and the atomic import lock:
+// WordPress has no API for them, and caching one-off reads would be useless.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 /**
  * Imports the 404s logged by the Redirection plugin before this one was installed.
  *

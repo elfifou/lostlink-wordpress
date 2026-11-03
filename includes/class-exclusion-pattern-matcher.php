@@ -72,7 +72,7 @@ final class Exclusion_Pattern_Matcher {
 	 * @param string[] $patterns Patterns, see split_patterns().
 	 */
 	public static function matches_any( string $path, array $patterns ): bool {
-		$previous_limit = ini_set( 'pcre.backtrack_limit', '100000' ); // phpcs:ignore WordPress.PHP.IniSet.Risky -- Restored below.
+		$previous_limit = ini_set( 'pcre.backtrack_limit', '100000' ); // phpcs:ignore WordPress.PHP.IniSet.Risky, Squiz.PHP.DiscouragedFunctions.Discouraged -- Bounds the regexes run on attacker-controlled paths, restored below.
 
 		try {
 			foreach ( $patterns as $pattern ) {
@@ -86,7 +86,7 @@ final class Exclusion_Pattern_Matcher {
 			return false;
 		} finally {
 			if ( false !== $previous_limit ) {
-				ini_set( 'pcre.backtrack_limit', $previous_limit ); // phpcs:ignore WordPress.PHP.IniSet.Risky
+				ini_set( 'pcre.backtrack_limit', $previous_limit ); // phpcs:ignore WordPress.PHP.IniSet.Risky, Squiz.PHP.DiscouragedFunctions.Discouraged -- Restores the limit.
 			}
 		}
 	}

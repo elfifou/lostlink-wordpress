@@ -7,6 +7,9 @@
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
+// Drops the plugin's own tables.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+
 require_once __DIR__ . '/includes/autoload.php';
 
 /** @var \wpdb $wpdb */
