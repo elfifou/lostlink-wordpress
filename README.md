@@ -41,6 +41,13 @@ wp dist-archive . --plugin-dirname=lostlink
 
 The WordPress.org assets (icon, banners, screenshots) are in `.wordpress-org/`.
 
+## Releasing
+
+1. Set the new version in `lostlink.php` (the `Version:` header and `LOSTLINK_VERSION`) and in the `Stable tag:` of `readme.txt`, and add its entry to the changelog of `readme.txt`.
+2. Commit, then tag and push: `git tag v1.2.3 && git push origin main v1.2.3`.
+
+The [Deploy](.github/workflows/deploy.yml) workflow then runs the checks, makes sure the tag matches these versions, publishes the release and the `.wordpress-org/` assets to the WordPress.org SVN, and attaches the zip to a GitHub release.
+
 ## Contributing
 
 Bugs and feature requests are welcome in the [issues](https://github.com/elfifou/lostlink-wordpress/issues). For help, use the [WordPress.org support forum](https://wordpress.org/support/plugin/lostlink/). Security issues are reported privately, see [SECURITY.md](SECURITY.md).

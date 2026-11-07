@@ -1,0 +1,58 @@
+# Publishes a release to WordPress.org when a version tag (v1.2.3) is pushed:
+# runs the checks, makes sure the tag matches the version in the code, then
+# commits the release content (what .distignore leaves) to the SVN trunk and
+# tag, the .wordpress-org folder to the SVN assets, and attaches the zip to a
+# GitHub release. Needs the SVN_USERNAME and SVN_PASSWORD repository secrets
+# (the WordPress.org username and its SVN password, from the account profile).
+name: Deploy
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: WordPress.org
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          header=$(sed -n 's/^ \* Version: *//p' lostlink.php)
+          constant=$(sed -n "s/^define( 'LOSTLINK_VERSION', '\(.*\)' );/\1/p" lostlink.php)
+          stable=$(sed -n 's/^Stable tag: *//p' readme.txt)
+          echo "Tag $version, header $header, LOSTLINK_VERSION $constant, Stable tag $stable"
+          if [ "$header" != "$version" ] || [ "$constant" != "$version" ] || [ "$stable" != "$version" ]; then
+            echo "::error::The tag does not match the version in lostlink.php and readme.txt."
+            exit 1
+          fi
+          grep -q "^= $version =" readme.txt || { echo "::error::No $version entry in the readme changelog."; exit 1; }
+
+      - name: Subversion
+        run: sudo apt-get update -q && sudo apt-get install -yq subversion
+
+      - id: deploy
+        uses: 10up/action-wordpress-plugin-deploy@2.3.0
+        with:
+          generate-zip: true
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          # The repository is named lostlink-wordpress.
+          SLUG: lostlink
+
+      - name: GitHub release
+        run: gh release create "$GITHUB_REF_NAME" "${{ steps.deploy.outputs.zip-path }}" --title "$GITHUB_REF_NAME" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

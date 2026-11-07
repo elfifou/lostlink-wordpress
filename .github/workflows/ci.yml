@@ -1,11 +1,12 @@
 # Coding standards, static analysis, tests and Plugin Check, on every push
-# and pull request.
+# and pull request, and before each release (called by deploy.yml).
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
