@@ -101,7 +101,7 @@ class Cache_Beacon {
 			return;
 		}
 
-		$uri = Request::server( 'REQUEST_URI' ) ?? '/';
+		$uri = Request::uri();
 		if ( ! $this->recorder->should_record( Hit_Recorder::decode_path( Hit_Recorder::get_raw_path( $uri ) ) ) ) {
 			return;
 		}

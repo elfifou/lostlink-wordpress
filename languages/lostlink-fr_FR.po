@@ -540,28 +540,28 @@ msgstr "La cible de la redirection ne doit contenir ni espaces ni caractères de
 msgid "The redirect target must be a path starting with \"/\" or an http(s) URL."
 msgstr "La cible de la redirection doit être un chemin commençant par « / » ou une URL http(s)."
 
-#: includes/class-redirect-service.php:225
+#: includes/class-redirect-service.php:228
 msgid "You are not allowed to redirect to another site."
 msgstr "Vous n’avez pas l’autorisation de rediriger vers un autre site."
 
-#: includes/class-redirect-service.php:291
+#: includes/class-redirect-service.php:313
 msgid "The target is the broken URL itself."
 msgstr "La cible est l’URL cassée elle-même."
 
 #. translators: %s: redirect target.
-#: includes/class-redirect-service.php:293
+#: includes/class-redirect-service.php:315
 #, php-format
 msgid "This redirect would create a loop: %s redirects back to this URL."
 msgstr "Cette redirection créerait une boucle : %s redirige vers cette URL."
 
 #. translators: 1: redirect target, 2: where it is redirected to.
-#: includes/class-redirect-service.php:305
+#: includes/class-redirect-service.php:327
 #, php-format
 msgid "The target %1$s is itself redirected to %2$s: visitors will go through two redirects. Consider using the final URL as target."
 msgstr "La cible %1$s est elle-même redirigée vers %2$s : les visiteurs passeront par deux redirections. Utilisez plutôt l’URL finale comme cible."
 
 #. translators: %s: redirect target.
-#: includes/class-redirect-service.php:319
+#: includes/class-redirect-service.php:341
 #, php-format
 msgid "The target %s is itself a broken URL that has not been fixed or ignored yet."
 msgstr "La cible %s est elle-même une URL cassée, qui n’a pas encore été corrigée ni ignorée."
@@ -830,3 +830,7 @@ msgstr "Repère les URL cassées qui vous font perdre des visiteurs, les classe 
 #: includes/class-admin.php:96
 msgid "When you visit an address of this site that does not exist (a \"404\" error), this address, the date and the address of the page you came from, if your browser sends it, are recorded to find and fix the broken links. No IP address, browser identifier or cookie is recorded. The addresses of the pages you came from are deleted after 90 days without a new visit, unless the site settings say otherwise."
 msgstr "Lorsque vous visitez une adresse de ce site qui n’existe pas (une erreur « 404 »), cette adresse, la date et l’adresse de la page d’où vous venez, si votre navigateur l’envoie, sont enregistrées pour trouver et corriger les liens cassés. Aucune adresse IP, aucun identifiant de navigateur ni aucun cookie n’est enregistré. Les adresses des pages d’où vous venez sont supprimées après 90 jours sans nouvelle visite, sauf réglage contraire du site."
+
+#: includes/class-redirect-service.php:249
+msgid "The redirect target contains characters not allowed in a URL, such as < > \" { } or a backslash: percent-encode them."
+msgstr "La cible de la redirection contient des caractères interdits dans une URL, comme < > \" { } ou une barre oblique inversée : encodez-les (encodage URL)."

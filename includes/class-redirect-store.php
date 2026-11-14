@@ -59,7 +59,7 @@ class Redirect_Store {
 			return;
 		}
 
-		$uri   = Request::server( 'REQUEST_URI' ) ?? '/';
+		$uri   = Request::uri();
 		$match = $this->match( $uri );
 		if ( null === $match ) {
 			return;

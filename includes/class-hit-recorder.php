@@ -54,9 +54,9 @@ class Hit_Recorder {
 		}
 		$this->handled = true;
 
-		// Raw: the path is only stored and compared, the referer escaped on output.
-		$uri     = Request::server( 'REQUEST_URI' ) ?? '/';
-		$referer = Request::server( 'HTTP_REFERER' );
+		// The path is raw, see Request::uri(); the referer is sanitized.
+		$uri     = Request::uri();
+		$referer = Request::referer();
 
 		$this->record( $uri, $referer, null, true );
 	}

@@ -12,11 +12,24 @@ use Lostlink\Request;
  */
 class Test_Request extends WP_UnitTestCase {
 
+	/**
+	 * The request URI before the test.
+	 *
+	 * @var mixed
+	 */
+	private $request_uri;
+
+	public function set_up(): void {
+		parent::set_up();
+		$this->request_uri = $_SERVER['REQUEST_URI'] ?? null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Restored as is in tear_down().
+	}
+
 	public function tear_down(): void {
-		$_GET     = array();
-		$_POST    = array();
-		$_REQUEST = array();
-		unset( $_SERVER['HTTP_X_TEST'] );
+		$_SERVER['REQUEST_URI'] = $this->request_uri;
+		$_GET                   = array();
+		$_POST                  = array();
+		$_REQUEST               = array();
+		unset( $_SERVER['HTTP_REFERER'] );
 		parent::tear_down();
 	}
 
@@ -34,7 +47,7 @@ class Test_Request extends WP_UnitTestCase {
 		$this->assertNull( Request::int( 'paged' ) );
 		$this->assertSame( '', Request::search( 's' ) );
 		$this->assertSame( array(), Request::keys( 'items' ) );
-		$this->assertNull( Request::server( 'HTTP_X_TEST' ) );
+		$this->assertNull( Request::referer() );
 	}
 
 	public function test_an_array_is_not_a_string(): void {
@@ -81,8 +94,41 @@ class Test_Request extends WP_UnitTestCase {
 		$this->assertSame( 'old page', Request::search( 's' ) );
 	}
 
-	public function test_server_values(): void {
-		$_SERVER['HTTP_X_TEST'] = wp_slash( '/a\'b' );
-		$this->assertSame( "/a'b", Request::server( 'HTTP_X_TEST' ) );
+	public function test_uri_is_kept_as_requested(): void {
+		// Encoded octets and special characters must stay, or a redirect for the URL would never match it.
+		$_SERVER['REQUEST_URI'] = wp_slash( "/l'%C3%A9t%C3%A9/<x>?a=1" );
+		$this->assertSame( "/l'%C3%A9t%C3%A9/<x>?a=1", Request::uri() );
+
+		unset( $_SERVER['REQUEST_URI'] );
+		$this->assertSame( '/', Request::uri() );
+	}
+
+	public function test_referer_is_sanitized(): void {
+		$_SERVER['HTTP_REFERER'] = wp_slash( "https://example.com/l'été?a=1&b=<2>" );
+		$this->assertSame( "https://example.com/l'été?a=1&b=2", Request::referer() );
+	}
+
+	/**
+	 * @dataProvider invalid_referers
+	 *
+	 * @param string $referer A referer.
+	 */
+	public function test_invalid_referers_are_dropped( string $referer ): void {
+		$_SERVER['HTTP_REFERER'] = $referer;
+		$this->assertNull( Request::referer() );
+	}
+
+	/**
+	 * @return array<string, array{string}>
+	 */
+	public function invalid_referers(): array {
+		return array(
+			'empty'      => array( '' ),
+			'javascript' => array( 'javascript:alert(1)' ),
+			'relative'   => array( '/page' ),
+			'other'      => array( 'ftp://example.com/' ),
+			'too long'   => array( 'https://example.com/' . str_repeat( 'a', Request::MAX_REFERER_LENGTH ) ),
+			'no host'    => array( 'https://' ),
+		);
 	}
 }

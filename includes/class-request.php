@@ -98,13 +98,52 @@ final class Request {
 	}
 
 	/**
-	 * Returns a $_SERVER value as sent, unslashed, null if missing.
-	 *
-	 * @param string $key E.g. "REQUEST_URI".
+	 * Maximum length of a referer kept, in bytes: longer ones are dropped.
 	 */
-	public static function server( string $key ): ?string {
-		$value = $_SERVER[ $key ] ?? null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Unslashed below, raw: see text().
-		return is_string( $value ) ? wp_unslash( $value ) : null;
+	public const MAX_REFERER_LENGTH = 2048;
+
+	/**
+	 * Returns the request URI, unslashed, "/" if missing.
+	 *
+	 * Not sanitized on purpose: it is the URL a 404 is recorded for and a
+	 * redirect matched against, so it must stay exactly as requested
+	 * (sanitize_text_field() would drop its %XX octets, esc_url_raw() some
+	 * characters, and a redirect would then never match the requested URL).
+	 * It is never output nor queried as is: its path is URL-decoded, hashed
+	 * and passed to $wpdb->prepare(), and escaped on output.
+	 */
+	public static function uri(): string {
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Compared and hashed, never output as is: see above.
+		$value = isset( $_SERVER['REQUEST_URI'] ) && is_string( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		return '' === $value ? '/' : $value;
+	}
+
+	/**
+	 * Returns the Referer header as a sanitized http(s) URL, null if missing
+	 * or not a valid one.
+	 */
+	public static function referer(): ?string {
+		if ( ! isset( $_SERVER['HTTP_REFERER'] ) || ! is_string( $_SERVER['HTTP_REFERER'] ) ) {
+			return null;
+		}
+		return self::sanitize_referer( esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ), array( 'http', 'https' ) ) );
+	}
+
+	/**
+	 * Sanitizes a referer: an http(s) URL with a host, through esc_url_raw(),
+	 * at most MAX_REFERER_LENGTH bytes; null for anything else.
+	 *
+	 * The referer is sent by the client: a bot can send any value.
+	 *
+	 * @param string $referer A referer.
+	 */
+	public static function sanitize_referer( string $referer ): ?string {
+		$url = esc_url_raw( $referer, array( 'http', 'https' ) );
+		if ( '' === $url || strlen( $url ) > self::MAX_REFERER_LENGTH || 1 !== preg_match( '#^https?://#i', $url ) ) {
+			return null;
+		}
+		$host = wp_parse_url( $url, PHP_URL_HOST );
+		return is_string( $host ) && '' !== $host ? $url : null;
 	}
 
 	/**

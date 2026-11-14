@@ -1,5 +1,5 @@
 # Files left out of the release built with wp dist-archive (the WordPress.org
-# zip and SVN): only the code, CSS, JS, translations and readme ship.
+# zip and SVN): only the code, CSS, JS and readme ship.
 .git
 .github
 # Directory assets (icon, banners, screenshots), published to the SVN assets/ folder.
@@ -17,3 +17,5 @@ phpstan.neon.dist
 phpunit.xml.dist
 tests
 *.zip
+# Translation sources (.pot, .po): translations ship from translate.wordpress.org.
+languages

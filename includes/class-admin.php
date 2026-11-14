@@ -1043,7 +1043,7 @@ final class Admin {
 		check_admin_referer( self::EXPORT_ACTION );
 
 		$args = array(
-			'status'  => 'ignored' === Request::text( 'status' ) ? 'ignored' : 'active',
+			'status'  => 'ignored' === Request::key( 'status' ) ? 'ignored' : 'active',
 			'search'  => Request::search( 's' ),
 			'orderby' => Request::key( 'orderby' ) ?? 'last_seen',
 			'order'   => Request::key( 'order' ) ?? 'desc',

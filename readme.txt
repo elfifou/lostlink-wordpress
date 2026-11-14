@@ -47,7 +47,7 @@ On Polylang sites, broken URLs and redirects keep their language prefix, and the
 
 * Storage is capped and purged every hour, so anonymous traffic and bots can't grow the tables without limit.
 * Modern, strictly typed PHP 8.1 code, checked with PHPStan at its strictest level and the WordPress Coding Standards, and covered by over 150 automated tests.
-* Translated into French.
+* Fully translatable.
 
 = For developers =
 

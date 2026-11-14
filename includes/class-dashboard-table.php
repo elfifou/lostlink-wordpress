@@ -89,7 +89,7 @@ class Dashboard_Table extends \WP_List_Table {
 	 * Returns the current view: "active" or "ignored".
 	 */
 	public function get_status(): string {
-		return 'ignored' === Request::text( 'status', Request::ANY ) ? 'ignored' : 'active';
+		return 'ignored' === Request::key( 'status', Request::ANY ) ? 'ignored' : 'active';
 	}
 
 	/**

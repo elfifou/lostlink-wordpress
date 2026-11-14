@@ -224,8 +224,8 @@ class Redirection_Importer {
 			// Redirection stores the request URI decoded: decoding it again
 			// only changes the rare paths with a literal "%".
 			$url     = $row['url'];
-			$referer = $row['referrer'] ?? '';
-			if ( '' !== $url && $this->recorder->record( $url, '' !== $referer ? $referer : null, self::timestamp( $row['created'] ) ) ) {
+			$referer = Request::sanitize_referer( $row['referrer'] ?? '' );
+			if ( '' !== $url && $this->recorder->record( $url, $referer, self::timestamp( $row['created'] ) ) ) {
 				$hashes[ Storage::path_hash( Hit_Recorder::decode_path( Hit_Recorder::get_raw_path( $url ) ) ) ] = true;
 				++$imported;
 			}

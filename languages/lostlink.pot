@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-03T10:48:05+01:00\n"
+"POT-Creation-Date: 2026-11-14T08:46:08+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lostlink\n"
@@ -543,28 +543,32 @@ msgstr ""
 msgid "The redirect target must be a path starting with \"/\" or an http(s) URL."
 msgstr ""
 
-#: includes/class-redirect-service.php:225
+#: includes/class-redirect-service.php:228
 msgid "You are not allowed to redirect to another site."
 msgstr ""
 
-#: includes/class-redirect-service.php:291
+#: includes/class-redirect-service.php:249
+msgid "The redirect target contains characters not allowed in a URL, such as < > \" { } or a backslash: percent-encode them."
+msgstr ""
+
+#: includes/class-redirect-service.php:313
 msgid "The target is the broken URL itself."
 msgstr ""
 
 #. translators: %s: redirect target.
-#: includes/class-redirect-service.php:293
+#: includes/class-redirect-service.php:315
 #, php-format
 msgid "This redirect would create a loop: %s redirects back to this URL."
 msgstr ""
 
 #. translators: 1: redirect target, 2: where it is redirected to.
-#: includes/class-redirect-service.php:305
+#: includes/class-redirect-service.php:327
 #, php-format
 msgid "The target %1$s is itself redirected to %2$s: visitors will go through two redirects. Consider using the final URL as target."
 msgstr ""
 
 #. translators: %s: redirect target.
-#: includes/class-redirect-service.php:319
+#: includes/class-redirect-service.php:341
 #, php-format
 msgid "The target %s is itself a broken URL that has not been fixed or ignored yet."
 msgstr ""

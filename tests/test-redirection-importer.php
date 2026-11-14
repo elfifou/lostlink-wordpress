@@ -65,7 +65,8 @@ class Test_Redirection_Importer extends WP_UnitTestCase {
 
 	public function test_imports_the_rows_logged_before_the_install(): void {
 		$this->log( '/old-page?utm_source=x', $this->now - 3 * DAY_IN_SECONDS, 'https://example.com/a' );
-		$this->log( '/Old-Page/', $this->now - 2 * HOUR_IN_SECONDS, 'https://example.com/a' );
+		// Counted, but its invalid referer is dropped.
+		$this->log( '/Old-Page/', $this->now - 2 * HOUR_IN_SECONDS, 'javascript:alert(1)' );
 		$this->log( '/style.css', $this->now - 2 * HOUR_IN_SECONDS );
 		// Logged by both plugins.
 		$this->log( '/old-page', $this->now - HOUR_IN_SECONDS + 60 );
