@@ -10,12 +10,16 @@ namespace Lostlink;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Reads the parameters of the current request, typed.
+ * Reads the parameters of the current request, typed and sanitized.
+ *
+ * Each method reads one parameter and unslashes, sanitizes and validates it
+ * in the same expression, with the function that fits its type: the
+ * superglobals are only read here, one key at a time.
  *
  * Any parameter can be sent as an array (?tab[]=x): a parameter read as a
- * string or a number is then missing, and a list keeps only its scalar items.
- * Values are unslashed. Nonces are checked by the handlers of the actions,
- * not here: most parameters only choose what is shown.
+ * string or a number is then missing, and a list drops its nested arrays.
+ * Nonces are checked by the handlers of the actions, not here: most
+ * parameters only choose what is shown.
  *
  * phpcs:disable WordPress.Security.NonceVerification -- See above.
  */
@@ -29,17 +33,14 @@ final class Request {
 	public const ANY  = 'request';
 
 	/**
-	 * Returns a parameter as sent, unslashed, null if missing or not a string.
-	 *
-	 * Not sanitized: for values validated by the caller, e.g. a redirect target.
-	 *
-	 * @param string                         $key    Parameter name.
-	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
+	 * Maximum length of a request URI, in bytes: longer ones are ignored.
 	 */
-	public static function text( string $key, string $source = self::GET ): ?string {
-		$value = self::raw( $key, $source );
-		return is_string( $value ) ? wp_unslash( $value ) : null;
-	}
+	public const MAX_URI_LENGTH = 2048;
+
+	/**
+	 * Maximum length of a referer kept, in bytes: longer ones are dropped.
+	 */
+	public const MAX_REFERER_LENGTH = 2048;
 
 	/**
 	 * Returns a parameter through sanitize_key(), null if missing.
@@ -48,8 +49,11 @@ final class Request {
 	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
 	 */
 	public static function key( string $key, string $source = self::GET ): ?string {
-		$value = self::text( $key, $source );
-		return null === $value ? null : sanitize_key( $value );
+		return match ( $source ) {
+			self::GET  => isset( $_GET[ $key ] ) && is_string( $_GET[ $key ] ) ? sanitize_key( wp_unslash( $_GET[ $key ] ) ) : null,
+			self::POST => isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] ) ? sanitize_key( wp_unslash( $_POST[ $key ] ) ) : null,
+			self::ANY  => isset( $_REQUEST[ $key ] ) && is_string( $_REQUEST[ $key ] ) ? sanitize_key( wp_unslash( $_REQUEST[ $key ] ) ) : null,
+		};
 	}
 
 	/**
@@ -59,7 +63,11 @@ final class Request {
 	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
 	 */
 	public static function search( string $key, string $source = self::GET ): string {
-		return sanitize_text_field( self::text( $key, $source ) ?? '' );
+		return match ( $source ) {
+			self::GET  => isset( $_GET[ $key ] ) && is_string( $_GET[ $key ] ) ? sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) : '',
+			self::POST => isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '',
+			self::ANY  => isset( $_REQUEST[ $key ] ) && is_string( $_REQUEST[ $key ] ) ? sanitize_text_field( wp_unslash( $_REQUEST[ $key ] ) ) : '',
+		};
 	}
 
 	/**
@@ -69,53 +77,119 @@ final class Request {
 	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
 	 */
 	public static function int( string $key, string $source = self::GET ): ?int {
-		$value = self::raw( $key, $source );
-		return is_scalar( $value ) ? absint( $value ) : null;
+		return match ( $source ) {
+			self::GET  => isset( $_GET[ $key ] ) && is_scalar( $_GET[ $key ] ) ? absint( wp_unslash( $_GET[ $key ] ) ) : null,
+			self::POST => isset( $_POST[ $key ] ) && is_scalar( $_POST[ $key ] ) ? absint( wp_unslash( $_POST[ $key ] ) ) : null,
+			self::ANY  => isset( $_REQUEST[ $key ] ) && is_scalar( $_REQUEST[ $key ] ) ? absint( wp_unslash( $_REQUEST[ $key ] ) ) : null,
+		};
 	}
 
 	/**
 	 * Returns a list parameter (items[]=...) through sanitize_key().
 	 *
-	 * A single value counts as a list of one.
+	 * A single value counts as a list of one. Nested arrays (sanitized
+	 * item by item by map_deep()) and empty keys are dropped.
 	 *
 	 * @param string                         $key    Parameter name.
 	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
 	 * @return list<string>
 	 */
 	public static function keys( string $key, string $source = self::GET ): array {
-		return array_map( 'sanitize_key', self::strings( $key, $source ) );
+		$keys = match ( $source ) {
+			self::GET  => isset( $_GET[ $key ] ) ? map_deep( wp_unslash( (array) $_GET[ $key ] ), 'sanitize_key' ) : array(),
+			self::POST => isset( $_POST[ $key ] ) ? map_deep( wp_unslash( (array) $_POST[ $key ] ), 'sanitize_key' ) : array(),
+			self::ANY  => isset( $_REQUEST[ $key ] ) ? map_deep( wp_unslash( (array) $_REQUEST[ $key ] ), 'sanitize_key' ) : array(),
+		};
+		$list = array();
+		foreach ( (array) $keys as $item ) {
+			if ( is_string( $item ) && '' !== $item ) {
+				$list[] = $item;
+			}
+		}
+		return $list;
 	}
 
 	/**
-	 * Returns a list parameter (items[]=...) as non-negative integers.
+	 * Returns a list parameter (items[]=...) as positive integers (IDs).
+	 *
+	 * A single value counts as a list of one. Nested arrays and values that
+	 * are not positive integers are dropped.
 	 *
 	 * @param string                         $key    Parameter name.
 	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
 	 * @return list<int>
 	 */
 	public static function ints( string $key, string $source = self::GET ): array {
-		return array_map( 'absint', self::strings( $key, $source ) );
+		$ints = match ( $source ) {
+			self::GET  => isset( $_GET[ $key ] ) ? map_deep( wp_unslash( (array) $_GET[ $key ] ), 'absint' ) : array(),
+			self::POST => isset( $_POST[ $key ] ) ? map_deep( wp_unslash( (array) $_POST[ $key ] ), 'absint' ) : array(),
+			self::ANY  => isset( $_REQUEST[ $key ] ) ? map_deep( wp_unslash( (array) $_REQUEST[ $key ] ), 'absint' ) : array(),
+		};
+		$list = array();
+		foreach ( (array) $ints as $item ) {
+			if ( is_int( $item ) && 0 !== $item ) {
+				$list[] = $item;
+			}
+		}
+		return $list;
 	}
 
 	/**
-	 * Maximum length of a referer kept, in bytes: longer ones are dropped.
+	 * Returns a URL parameter through wp_sanitize_redirect(), null if missing.
+	 *
+	 * For redirect targets: the function wp_redirect() applies to its
+	 * location (spaces and non-ASCII characters percent-encoded, characters
+	 * not allowed in a URL dropped), so the target saved is the one served.
+	 * Unlike esc_url_raw(), it never adds "http://" to a relative value,
+	 * which Redirect_Service::normalize_target() must see to refuse it.
+	 * Spaces around the value (pasted URLs) are ignored.
+	 *
+	 * @param string                         $key    Parameter name.
+	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
 	 */
-	public const MAX_REFERER_LENGTH = 2048;
+	public static function url( string $key, string $source = self::GET ): ?string {
+		$url = match ( $source ) {
+			self::GET  => isset( $_GET[ $key ] ) && is_string( $_GET[ $key ] ) ? wp_sanitize_redirect( wp_unslash( $_GET[ $key ] ) ) : null,
+			self::POST => isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] ) ? wp_sanitize_redirect( wp_unslash( $_POST[ $key ] ) ) : null,
+			self::ANY  => isset( $_REQUEST[ $key ] ) && is_string( $_REQUEST[ $key ] ) ? wp_sanitize_redirect( wp_unslash( $_REQUEST[ $key ] ) ) : null,
+		};
+		// wp_sanitize_redirect() encodes the spaces around the value too.
+		return null === $url ? null : preg_replace( '/^(?:%20)+|(?:%20)+$/', '', $url );
+	}
 
 	/**
-	 * Returns the request URI, unslashed, "/" if missing.
+	 * Returns the request URI, sanitized and validated, null if missing or
+	 * invalid (no 404 is then recorded nor redirected for the request).
 	 *
-	 * Not sanitized on purpose: it is the URL a 404 is recorded for and a
-	 * redirect matched against, so it must stay exactly as requested
-	 * (sanitize_text_field() would drop its %XX octets, esc_url_raw() some
-	 * characters, and a redirect would then never match the requested URL).
-	 * It is never output nor queried as is: its path is URL-decoded, hashed
-	 * and passed to $wpdb->prepare(), and escaped on output.
+	 * The URI is what a 404 is recorded for and a redirect matched against,
+	 * so it must keep its meaning: see sanitize_uri().
 	 */
-	public static function uri(): string {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Compared and hashed, never output as is: see above.
-		$value = isset( $_SERVER['REQUEST_URI'] ) && is_string( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
-		return '' === $value ? '/' : $value;
+	public static function uri(): ?string {
+		if ( ! isset( $_SERVER['REQUEST_URI'] ) || ! is_string( $_SERVER['REQUEST_URI'] ) ) {
+			return null;
+		}
+		return self::validate_uri( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+	}
+
+	/**
+	 * Sanitizes and validates a request URI (path and query string).
+	 *
+	 * - Sanitized with esc_url_raw(): characters not allowed in a URL are
+	 *   dropped, spaces encoded, encoded line breaks (%0A, %0D) removed. The
+	 *   characters browsers send percent-encoded stay encoded, so a URL a
+	 *   browser requests keeps its meaning, and its decoded path stays the
+	 *   one recorded and matched.
+	 * - Validated: a path starting with "/", at most MAX_URI_LENGTH bytes,
+	 *   with a well-formed percent-encoding and no control character once
+	 *   decoded; null otherwise.
+	 *
+	 * The decoded path is then only hashed, passed to $wpdb->prepare() and
+	 * escaped on output.
+	 *
+	 * @param string $uri A request URI.
+	 */
+	public static function sanitize_uri( string $uri ): ?string {
+		return self::validate_uri( esc_url_raw( $uri ) );
 	}
 
 	/**
@@ -147,32 +221,20 @@ final class Request {
 	}
 
 	/**
-	 * Returns the string items of a list parameter, unslashed.
+	 * Validates a request URI already sanitized with esc_url_raw(), see
+	 * sanitize_uri().
 	 *
-	 * @param string                         $key    Parameter name.
-	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
-	 * @return list<string>
+	 * @param string $uri A sanitized request URI.
 	 */
-	private static function strings( string $key, string $source ): array {
-		$value = self::raw( $key, $source );
-		$items = is_array( $value ) ? $value : array( $value );
-		return array_values( array_map( 'wp_unslash', array_filter( $items, 'is_string' ) ) );
-	}
-
-	/**
-	 * Returns a parameter, of any type.
-	 *
-	 * @param string                         $key    Parameter name.
-	 * @param self::GET|self::POST|self::ANY $source Where the parameter is read.
-	 * @return mixed
-	 */
-	private static function raw( string $key, string $source ) {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Typed and unslashed by the callers.
-		$params = match ( $source ) {
-			self::GET  => $_GET,
-			self::POST => $_POST,
-			self::ANY  => $_REQUEST,
-		};
-		return $params[ $key ] ?? null;
+	private static function validate_uri( string $uri ): ?string {
+		if ( ! str_starts_with( $uri, '/' ) || strlen( $uri ) > self::MAX_URI_LENGTH ) {
+			return null;
+		}
+		// A "%" must start an encoded octet.
+		if ( 1 === preg_match( '/%(?![0-9a-f]{2})/i', $uri ) ) {
+			return null;
+		}
+		$path = strtok( $uri, '?#' );
+		return 1 === preg_match( '/[\x00-\x1f\x7f]/', rawurldecode( $path ) ) ? null : $uri;
 	}
 }

@@ -59,6 +59,17 @@ final class Admin {
 	public const REFERERS_PER_PAGE = 100;
 
 	/**
+	 * HTML allowed in a link built by referer_link(), escaped again on output.
+	 */
+	private const LINK_HTML = array(
+		'a' => array(
+			'href'   => true,
+			'target' => true,
+			'rel'    => true,
+		),
+	);
+
+	/**
 	 * Dashboard table, built on page load so its actions and screen options
 	 * are handled before any output.
 	 *
@@ -387,21 +398,19 @@ final class Admin {
 	 */
 	private static function render_fix(): void {
 		$hash = Request::key( 'path_hash' ) ?? '';
-		// Only shown escaped in the form, validated when submitted:
-		// sanitize_text_field() would strip the percent-encoded characters.
-		$target = Request::text( 'target' ) ?? '';
+		// Sanitized like a redirect location, escaped in the form, validated when submitted.
+		$target = Request::url( 'target' ) ?? '';
 		$code   = Request::int( 'status_code' ) ?? 301;
 
 		$record = ( new Storage() )->get_by_hash( $hash );
-		$back   = sprintf( '<p><a href="%s">&larr; %s</a></p>', esc_url( self::url() ), esc_html__( 'Back to the broken URLs', 'lostlink' ) );
 		if ( null === $record || '1' === $record['fixed'] ) {
 			wp_admin_notice( esc_html__( 'This broken URL is no longer in the list, or is already fixed.', 'lostlink' ), array( 'type' => 'error' ) );
-			echo $back; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+			self::back_link( self::url(), __( 'Back to the broken URLs', 'lostlink' ) );
 			return;
 		}
 
 		$backend = Redirect_Service::create_default()->backend();
-		echo $back; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+		self::back_link( self::url(), __( 'Back to the broken URLs', 'lostlink' ) );
 		?>
 		<div class="lostlink-panel">
 		<h2 class="lostlink-panel-title">
@@ -578,9 +587,8 @@ final class Admin {
 		$hash = Request::key( 'path_hash', Request::POST ) ?? '';
 		check_admin_referer( self::FIX_ACTION . '_' . $hash );
 
-		// Validated by Redirect_Service::normalize_target(): sanitizing it here
-		// would silently change the URL.
-		$target = Request::text( 'target', Request::POST ) ?? '';
+		// Sanitized like a redirect location, validated by Redirect_Service::normalize_target().
+		$target = Request::url( 'target', Request::POST ) ?? '';
 		$code   = Request::int( 'status_code', Request::POST ) ?? 301;
 
 		$result = Redirect_Service::create_default()->fix( $hash, $target, $code, current_user_can( self::settings_capability() ) );
@@ -690,18 +698,17 @@ final class Admin {
 	private static function render_edit(): void {
 		$id       = Request::int( 'redirect' ) ?? 0;
 		$redirect = ( new Redirect_Store() )->get( $id );
-		$back     = sprintf( '<p><a href="%s">&larr; %s</a></p>', esc_url( self::url( array( 'tab' => 'redirects' ) ) ), esc_html__( 'Back to the redirects', 'lostlink' ) );
 		if ( null === $redirect ) {
 			wp_admin_notice( esc_html__( 'This redirect no longer exists.', 'lostlink' ), array( 'type' => 'error' ) );
-			echo $back; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+			self::back_link( self::url( array( 'tab' => 'redirects' ) ), __( 'Back to the redirects', 'lostlink' ) );
 			return;
 		}
 
 		// As on the fix tab: shown escaped, validated when submitted.
-		$target = Request::text( 'target' ) ?? $redirect['target'];
+		$target = Request::url( 'target' ) ?? $redirect['target'];
 		$code   = Request::int( 'status_code' ) ?? (int) $redirect['status_code'];
 
-		echo $back; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+		self::back_link( self::url( array( 'tab' => 'redirects' ) ), __( 'Back to the redirects', 'lostlink' ) );
 		?>
 		<div class="lostlink-panel">
 		<h2 class="lostlink-panel-title">
@@ -768,8 +775,8 @@ final class Admin {
 		$id = Request::int( 'redirect', Request::POST ) ?? 0;
 		check_admin_referer( self::EDIT_ACTION . '_' . $id );
 
-		// Validated by Redirect_Service::normalize_target(), see handle_fix().
-		$target = Request::text( 'target', Request::POST ) ?? '';
+		// Sanitized like a redirect location, validated by Redirect_Service::normalize_target().
+		$target = Request::url( 'target', Request::POST ) ?? '';
 		$code   = Request::int( 'status_code', Request::POST ) ?? 301;
 
 		$result = Redirect_Service::create_default()->edit( $id, $target, $code, current_user_can( self::settings_capability() ) );
@@ -948,18 +955,17 @@ final class Admin {
 
 		$storage = new Storage();
 		$record  = $storage->get_by_hash( $hash );
-		$back    = sprintf( '<p><a href="%s">&larr; %s</a></p>', esc_url( self::url() ), esc_html__( 'Back to the broken URLs', 'lostlink' ) );
 
 		if ( null === $record ) {
 			wp_admin_notice( esc_html__( 'This broken URL no longer exists.', 'lostlink' ), array( 'type' => 'error' ) );
-			echo $back; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+			self::back_link( self::url(), __( 'Back to the broken URLs', 'lostlink' ) );
 			return;
 		}
 
 		$total    = $storage->count_referers( array( $hash ) )[ $hash ] ?? 0;
 		$referers = $storage->get_referers( $hash, self::REFERERS_PER_PAGE, ( $paged - 1 ) * self::REFERERS_PER_PAGE );
 		?>
-		<?php echo $back; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above. ?>
+		<?php self::back_link( self::url(), __( 'Back to the broken URLs', 'lostlink' ) ); ?>
 		<h2>
 			<?php
 			/* translators: %s: broken URL path. */
@@ -983,7 +989,7 @@ final class Admin {
 			<tbody>
 				<?php foreach ( $referers as $referer ) : ?>
 					<tr>
-						<td class="lostlink-url"><?php echo self::referer_link( $referer['referer'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in referer_link(). ?></td>
+						<td class="lostlink-url"><?php echo wp_kses( self::referer_link( $referer['referer'] ), self::LINK_HTML ); ?></td>
 						<td><?php echo esc_html( number_format_i18n( (int) $referer['count'] ) ); ?></td>
 						<td><?php echo esc_html( self::format_date( (int) $referer['last_seen'] ) ); ?></td>
 					</tr>
@@ -1005,6 +1011,16 @@ final class Admin {
 		if ( null !== $pages ) {
 			echo '<div class="tablenav"><div class="tablenav-pages">' . wp_kses_post( $pages ) . '</div></div>';
 		}
+	}
+
+	/**
+	 * Prints a "back" link.
+	 *
+	 * @param string $url   Where the link goes.
+	 * @param string $label Link text.
+	 */
+	private static function back_link( string $url, string $label ): void {
+		printf( '<p><a href="%s">&larr; %s</a></p>', esc_url( $url ), esc_html( $label ) );
 	}
 
 	/**

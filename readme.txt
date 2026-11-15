@@ -86,7 +86,7 @@ Only 404s cost anything: a few database writes per 404, and a lookup of the buil
 
 = Are all 404s recorded? =
 
-Only the 404s served by WordPress itself. Requests the web server answers without loading WordPress are not seen, such as missing images, CSS and JS files on nginx setups that serve static files directly. 404 pages served by a page cache are counted through a script, so only for visitors running JavaScript, which leaves out most bots.
+Only the 404s served by WordPress itself. Requests the web server answers without loading WordPress are not seen, such as missing images, CSS and JS files on nginx setups that serve static files directly. 404 pages served by a page cache are counted through a script, so only for visitors running JavaScript, which leaves out most bots. Malformed URLs (an invalid percent-encoding, an encoded control character) and URLs longer than 2,048 characters are ignored.
 
 = How much data is kept? =
 

@@ -221,8 +221,8 @@ class Redirection_Importer {
 		$hashes   = array();
 		$imported = 0;
 		foreach ( $rows as $row ) {
-			// Redirection stores the request URI decoded: decoding it again
-			// only changes the rare paths with a literal "%".
+			// Redirection stores the request URI decoded; record() sanitizes it like
+			// a live one, and skips the rare paths with a literal "%" (malformed).
 			$url     = $row['url'];
 			$referer = Request::sanitize_referer( $row['referrer'] ?? '' );
 			if ( '' !== $url && $this->recorder->record( $url, $referer, self::timestamp( $row['created'] ) ) ) {

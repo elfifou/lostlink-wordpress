@@ -54,11 +54,10 @@ class Hit_Recorder {
 		}
 		$this->handled = true;
 
-		// The path is raw, see Request::uri(); the referer is sanitized.
-		$uri     = Request::uri();
-		$referer = Request::referer();
-
-		$this->record( $uri, $referer, null, true );
+		$uri = Request::uri();
+		if ( null !== $uri ) {
+			$this->record( $uri, Request::referer(), null, true );
+		}
 	}
 
 	/**
@@ -66,6 +65,9 @@ class Hit_Recorder {
 	 *
 	 * Never throws: the URI and referer are attacker-controlled, and a failure
 	 * to record them must never turn the visitor's 404 page into an error.
+	 * Both are sanitized and validated first (Request::sanitize_uri() and
+	 * sanitize_referer()), whatever their source: an invalid URI is not
+	 * recorded, an invalid referer is dropped.
 	 *
 	 * @param string      $uri     The request URI (path and query string, as sent by the client).
 	 * @param string|null $referer The Referer header, if any.
@@ -76,6 +78,12 @@ class Hit_Recorder {
 	 */
 	public function record( string $uri, ?string $referer = null, ?int $time = null, bool $live = false ): bool {
 		try {
+			$uri = Request::sanitize_uri( $uri );
+			if ( null === $uri ) {
+				return false;
+			}
+			$referer = null === $referer ? null : Request::sanitize_referer( $referer );
+
 			$raw_path = self::get_raw_path( $uri );
 			$path     = self::decode_path( $raw_path );
 
@@ -89,7 +97,7 @@ class Hit_Recorder {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- No logger in WordPress core.
 			error_log( 'Lostlink: unable to record a 404 hit: ' . $e->getMessage() );
 			return false;
-		}
+		}//end try
 	}
 
 	/**

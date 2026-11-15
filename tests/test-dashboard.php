@@ -184,6 +184,35 @@ class Test_Dashboard extends WP_UnitTestCase {
 		$this->assertSame( 2, substr_count( $html, 'name="items[]"' ) );
 	}
 
+	public function test_search_box_sanitizes_its_parameters() {
+		set_current_screen( 'tools_page_' . Admin::PAGE );
+		$this->storage->record_hit( '/a', time() );
+		$table = new Dashboard_Table( $this->storage );
+		$table->prepare_items();
+
+		// Sent as arrays, the core search box prints them as strings, with warnings.
+		$_REQUEST['s']       = array( 'x' );
+		$_REQUEST['orderby'] = array( 'count' );
+		$_REQUEST['order']   = array( 'asc' );
+		ob_start();
+		$table->search_box( 'Search', 'lostlink-search' );
+		$html = (string) ob_get_clean();
+		$this->assertStringContainsString( 'name="s" value=""', $html );
+		$this->assertStringNotContainsString( 'name="order', $html );
+
+		$_REQUEST['s']       = '"><script>x</script>';
+		$_REQUEST['orderby'] = 'count"><b>';
+		$_REQUEST['order']   = 'asc';
+		ob_start();
+		$table->search_box( 'Search', 'lostlink-search' );
+		$html = (string) ob_get_clean();
+		$this->assertStringNotContainsString( '<script>', $html );
+		$this->assertStringNotContainsString( '<b>', $html );
+		$this->assertStringContainsString( 'name="orderby" value="countb"', $html );
+		$this->assertStringContainsString( 'name="order" value="asc"', $html );
+		unset( $_REQUEST['orderby'], $_REQUEST['order'] );
+	}
+
 	public function test_bulk_actions_depend_on_the_view() {
 		set_current_screen( 'tools_page_' . Admin::PAGE );
 

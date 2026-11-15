@@ -207,16 +207,17 @@ class Redirect_Service {
 			return new \WP_Error( 'lostlink_invalid_target', __( 'The redirect target must not contain spaces or control characters.', 'lostlink' ) );
 		}
 
+		// As wp_redirect() does to its location: non-ASCII characters encoded,
+		// characters not allowed in a URL dropped. Request::url() already did.
+		$target = wp_sanitize_redirect( $target );
+
 		// "//host/path" is protocol-relative: an external URL, not a path.
 		if ( str_starts_with( $target, '/' ) && ! str_starts_with( $target, '//' ) ) {
-			return self::is_sanitized( $target ) ? $target : self::invalid_characters();
+			return $target;
 		}
 
 		if ( ! self::is_http_url( $target ) ) {
 			return new \WP_Error( 'lostlink_invalid_target', __( 'The redirect target must be a path starting with "/" or an http(s) URL.', 'lostlink' ) );
-		}
-		if ( ! self::is_sanitized( $target ) ) {
-			return self::invalid_characters();
 		}
 
 		$relative = self::relative_url( $target );
@@ -228,25 +229,6 @@ class Redirect_Service {
 			return new \WP_Error( 'lostlink_external_target', __( 'You are not allowed to redirect to another site.', 'lostlink' ) );
 		}
 		return $target;
-	}
-
-	/**
-	 * Whether esc_url_raw() keeps a target as is.
-	 *
-	 * A target with characters it would drop is refused rather than silently
-	 * changed: the redirect would not go where the user asked.
-	 *
-	 * @param string $target A path or an http(s) URL.
-	 */
-	private static function is_sanitized( string $target ): bool {
-		return esc_url_raw( $target, array( 'http', 'https' ) ) === $target;
-	}
-
-	/**
-	 * The error of a target with characters not allowed in a URL.
-	 */
-	private static function invalid_characters(): \WP_Error {
-		return new \WP_Error( 'lostlink_invalid_target', __( 'The redirect target contains characters not allowed in a URL, such as < > " { } or a backslash: percent-encode them.', 'lostlink' ) );
 	}
 
 	/**

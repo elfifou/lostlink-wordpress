@@ -24,6 +24,8 @@ if ( ! class_exists( '\WP_List_Table' ) ) {
  */
 class Dashboard_Table extends \WP_List_Table {
 
+	use Search_Box;
+
 	/**
 	 * Plural name, also used in the bulk action nonce ("bulk-{plural}").
 	 */

@@ -102,7 +102,7 @@ class Cache_Beacon {
 		}
 
 		$uri = Request::uri();
-		if ( ! $this->recorder->should_record( Hit_Recorder::decode_path( Hit_Recorder::get_raw_path( $uri ) ) ) ) {
+		if ( null === $uri || ! $this->recorder->should_record( Hit_Recorder::decode_path( Hit_Recorder::get_raw_path( $uri ) ) ) ) {
 			return;
 		}
 
@@ -139,20 +139,24 @@ class Cache_Beacon {
 				'permission_callback' => '__return_true',
 				'args'                => array(
 					'uri'     => array(
-						'type'     => 'string',
-						'required' => true,
+						'type'              => 'string',
+						'required'          => true,
+						// Run before the type is checked. Invalid: '', whose signature never matches.
+						'sanitize_callback' => static fn( mixed $value ): string => is_string( $value ) ? Request::sanitize_uri( $value ) ?? '' : '',
 					),
 					'time'    => array(
 						'type'     => 'integer',
 						'required' => true,
 					),
 					'sig'     => array(
-						'type'     => 'string',
-						'required' => true,
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_key',
 					),
 					'referer' => array(
-						'type'    => 'string',
-						'default' => '',
+						'type'              => 'string',
+						'default'           => '',
+						'sanitize_callback' => static fn( mixed $value ): string => is_string( $value ) ? Request::sanitize_referer( $value ) ?? '' : '',
 					),
 				),
 			)

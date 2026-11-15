@@ -5,6 +5,7 @@
  * Maps Lostlink\Hit_Recorder to includes/class-hit-recorder.php and
  * Lostlink\Redirect_Backend to includes/interface-redirect-backend.php,
  * Lostlink\Priority (an enum) to includes/enum-priority.php,
+ * Lostlink\Search_Box (a trait) to includes/trait-search-box.php,
  * following the WordPress file naming conventions.
  *
  * @package Lostlink
@@ -20,7 +21,7 @@ spl_autoload_register(
 		}
 
 		$name = str_replace( '_', '-', strtolower( substr( $class_name, strlen( $prefix ) ) ) );
-		foreach ( array( 'class', 'interface', 'enum' ) as $kind ) {
+		foreach ( array( 'class', 'interface', 'enum', 'trait' ) as $kind ) {
 			$file = __DIR__ . "/$kind-$name.php";
 			if ( is_readable( $file ) ) {
 				require_once $file;

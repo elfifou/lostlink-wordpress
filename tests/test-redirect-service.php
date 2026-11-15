@@ -110,17 +110,16 @@ class Test_Redirect_Service extends WP_UnitTestCase {
 			'protocol-relative' => array( '//evil.example/x', 'lostlink_invalid_target' ),
 			'relative'          => array( 'new-page', 'lostlink_invalid_target' ),
 			'ftp'               => array( 'ftp://example.com/', 'lostlink_invalid_target' ),
-			// Characters esc_url_raw() drops: refused, not silently changed.
-			'html in a path'    => array( '/a<b>', 'lostlink_invalid_target' ),
-			'quote in a url'    => array( 'https://example.com/"x', 'lostlink_invalid_target' ),
-			'backslash'         => array( '/a\\b', 'lostlink_invalid_target' ),
 		);
 	}
 
-	public function test_valid_targets_are_kept_as_entered() {
-		// Non-ASCII, percent-encoded octets, quotes and query strings are kept.
-		$this->assertSame( "/l'été/%C3%A9?a=1&b=2", $this->service->normalize_target( "/l'été/%C3%A9?a=1&b=2", false ) );
+	public function test_targets_are_sanitized_like_redirect_locations() {
+		// As wp_redirect() would send them: non-ASCII encoded, characters not allowed in a URL dropped.
+		$this->assertSame( '/l%C3%A9t%C3%A9/%C3%A9?a=1&b[]=2', $this->service->normalize_target( "/l'été/%C3%A9?a=1&b[]=2", false ) );
+		$this->assertSame( '/ab', $this->service->normalize_target( '/a<b>', false ) );
 		$this->assertSame( 'https://example.com/new?a=1&b=2#c', $this->service->normalize_target( ' https://example.com/new?a=1&b=2#c ', true ) );
+		// Nothing left: not a path.
+		$this->assertWPError( $this->service->normalize_target( '<>', false ) );
 	}
 
 	public function test_same_site_urls_become_paths() {

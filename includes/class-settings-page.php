@@ -15,6 +15,11 @@ defined( 'ABSPATH' ) || exit;
 final class Settings_Page {
 
 	/**
+	 * HTML allowed in the field descriptions.
+	 */
+	private const DESCRIPTION_HTML = array( 'code' => array() );
+
+	/**
 	 * Settings group, the option_page of the form.
 	 */
 	public const GROUP = 'lostlink';
@@ -189,7 +194,6 @@ final class Settings_Page {
 		$id    = 'lostlink-' . $key;
 		$name  = Settings::OPTION . '[' . $key . ']';
 		$value = Settings::all()[ $key ] ?? null;
-		$help  = wp_kses( $args['description'], array( 'code' => array() ) );
 
 		if ( 'checkbox' === $args['type'] ) {
 			printf(
@@ -197,7 +201,7 @@ final class Settings_Page {
 				esc_attr( $id ),
 				esc_attr( $name ),
 				checked( (bool) $value, true, false ),
-				$help // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_kses() above.
+				wp_kses( $args['description'], self::DESCRIPTION_HTML )
 			);
 			return;
 		}
@@ -221,7 +225,7 @@ final class Settings_Page {
 				absint( Settings::NUMBER_MINIMUMS[ $key ] ?? 0 )
 			);
 		}
-		printf( '<p class="description" id="%s-description">%s</p>', esc_attr( $id ), $help ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_kses() above.
+		printf( '<p class="description" id="%s-description">%s</p>', esc_attr( $id ), wp_kses( $args['description'], self::DESCRIPTION_HTML ) );
 	}
 
 	/**
