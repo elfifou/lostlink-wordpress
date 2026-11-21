@@ -48,6 +48,8 @@ The WordPress.org assets (icon, banners, screenshots) are in `.wordpress-org/`.
 
 The [Deploy](.github/workflows/deploy.yml) workflow then runs the checks, makes sure the tag matches these versions, publishes the release and the `.wordpress-org/` assets to the WordPress.org SVN, and attaches the zip to a GitHub release.
 
+A change to `readme.txt` or `.wordpress-org/` alone (FAQ, "Tested up to", screenshots) needs no new version: once pushed to `main`, the [Readme and assets](.github/workflows/readme.yml) workflow publishes it to the SVN trunk and to the tag of the current `Stable tag`. It refuses when `main` has unreleased code changes: the readme then goes out with the next release.
+
 ## Contributing
 
 Bugs and feature requests are welcome in the [issues](https://github.com/elfifou/lostlink-wordpress/issues). For help, use the [WordPress.org support forum](https://wordpress.org/support/plugin/lostlink/). Security issues are reported privately, see [SECURITY.md](SECURITY.md).

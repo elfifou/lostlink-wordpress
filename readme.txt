@@ -110,11 +110,11 @@ Each site of a network has its own data and settings, but it is not tested on mu
 
 = Where do I report a bug or suggest a feature? =
 
-Ask for help in the support forum. Bugs and feature requests are welcome in the GitHub issues of the plugin: https://github.com/elfifou/lostlink-wordpress/issues
+Ask for help in the [support forum](https://wordpress.org/support/plugin/lostlink/). Bugs and feature requests are welcome in the [GitHub issues](https://github.com/elfifou/lostlink-wordpress/issues) of the plugin.
 
 = How do I report a security issue? =
 
-Please don't post it publicly: report it privately from the Security tab of the GitHub repository (https://github.com/elfifou/lostlink-wordpress/security), with "Report a vulnerability".
+Please don't post it publicly: report it privately from the [Security tab](https://github.com/elfifou/lostlink-wordpress/security) of the GitHub repository, with "Report a vulnerability".
 
 == Screenshots ==
 

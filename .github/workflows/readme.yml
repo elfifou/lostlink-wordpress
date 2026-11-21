@@ -1,0 +1,49 @@
+# Publishes readme.txt and the .wordpress-org assets to WordPress.org when they
+# change on main, without a new version: readme.txt goes to the SVN trunk and
+# to the tag of its "Stable tag" (the one the plugin page shows), the assets to
+# the SVN assets/ folder. Only when the rest of the release content (what
+# .distignore leaves) is the same as the SVN trunk: while main has unreleased
+# code, the run fails and nothing is published; the readme then goes out with
+# the next release (deploy.yml). Uses the same secrets as deploy.yml.
+name: Readme and assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - readme.txt
+      - .wordpress-org/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wordpress-org-svn
+
+jobs:
+  update:
+    name: WordPress.org
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # A Stable tag not yet on the SVN is a release in progress: deploy.yml
+      # publishes it with its readme and assets.
+      - id: stable
+        name: Stable tag
+        run: |
+          stable=$(sed -n 's/^Stable tag: *//p' readme.txt | tr -d '\r')
+          if curl -fsSI "https://plugins.svn.wordpress.org/lostlink/tags/$stable/" > /dev/null; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Version $stable is not released yet: its readme and assets are published by the Deploy workflow."
+          fi
+
+      - if: steps.stable.outputs.released == 'true'
+        uses: 10up/action-wordpress-plugin-asset-update@2.2.0
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          # The repository is named lostlink-wordpress.
+          SLUG: lostlink
